@@ -8,7 +8,7 @@ const posts = [
     slug: "the-js-book",
     title: "The Js Book",
     summary: "lorem ipsum naaondsoidnioasndioasdasd",
-    category: "JS",
+    category: "JS, Web Dev",
     date: "115151516156",
   },
   {
@@ -16,7 +16,7 @@ const posts = [
     slug: "the-Node-book",
     title: "The Node Book",
     summary: "lorem ipsum naaondsoidnioasndioasdasd",
-    category: "JS",
+    categories: "Node, Backend",
     date: "115151516156",
   },
   {
@@ -24,7 +24,7 @@ const posts = [
     slug: "the-js-book",
     title: "The Js Book",
     summary: "lorem ipsum naaondsoidnioasndioasdasd",
-    category: "JS",
+    categories: "JS, Frontend",
     date: "115151516156",
   },
 ];
@@ -36,11 +36,12 @@ const generateError = (message) => ({
 app.get("/api/posts", (req, res) => {
   res.json(posts);
 });
+
 app.get("/api/posts/:id", (req, res) => {
-  const id = req.params.id;
-  console.log(id);
-  const post = posts.find((post) => post.id === id);
+  const postId = req.params.id;
+  const post = posts.find(item => item.id === Number(postId));
   if (post) res.json(post);
   else res.json(generateError("This post doesn't exist."));
 });
+
 app.listen(port, () => console.log(`Up and running on port ${port}...`));

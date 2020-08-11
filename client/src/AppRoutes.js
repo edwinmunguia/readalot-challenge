@@ -20,7 +20,7 @@ const AppRoutes = () => {
           <Route path="/signup">
             <SignUp />
           </Route>
-          <Route path="post/:id/:slug" exact>
+          <Route path="/post/:id/:slug" exact>
             <Post />
           </Route>
         </Switch>

@@ -1,0 +1,19 @@
+{
+  "name": "readalot-app",
+  "version": "1.0.1",
+  "description": "React app for coding challenge",
+  "main": "api.js",
+  "scripts": {
+    "start": "node api.js",
+    "api": "nodemon api.js"
+  },
+  "repository": "https://github.com/edwinmunguia/readalot-challenge",
+  "author": "Edwin Munguia",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

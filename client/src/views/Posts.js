@@ -13,16 +13,26 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className="posts">
+    <div className="app__posts">
       <h2 className="mb-3">Recent Posts</h2>
-      {isLoading ? (
-        <div class="spinner-border text-primary" role="status">
-          <span class="sr-only">Loading posts...</span>
+      {state.isLoading ? (
+        <div className="spinner-border text-primary" role="status">
+          <span className="sr-only">Loading posts...</span>
         </div>
       ) : (
         <div className="row">
-          {postsList.map((post) => (
-            <PostCard {...post} />
+          {state.postsList.map((post) => (
+            <PostCard
+              key={post.id}
+              id={post.id}
+              slug={post.slug}
+              title={post.title}
+              image={post.image}
+              content={post.content}
+              category={post.category}
+              summary={post.summary}
+              date={post.date}
+            />
           ))}
         </div>
       )}

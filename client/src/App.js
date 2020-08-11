@@ -1,34 +1,24 @@
 import React, { useReducer } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "bootstrap/dist/js/bootstrap.esm";
 import { AuthContext } from "./contexts/AuthContext";
 import { initialAuthReducer, authReducer } from "./reducers/authreducer";
-import MainLayout from "./views/MainLayout";
-import Posts from "./views/Posts";
-import Post from "./views/Post";
-import LogIn from "./views/LogIn";
-import SignUp from "./views/SignUp";
+import AppRoutes from "./AppRoutes";
+import 'bootstrap/dist/css/bootstrap.css';
 import "./App.css";
 
 function App() {
   const [authState, authDispatch] = useReducer(authReducer, initialAuthReducer);
   const authContext = {
     loggedInUser: authState.user,
-    logInUser: (user) => authDispatch({ type: "LOGIN", user }),
-    logOutUser: () => authDispatch({ type: "LOGOUT"}),
+    logInUser: (user, token) => authDispatch({ type: "LOGIN", user, token }),
+    logOutUser: () => authDispatch({ type: "LOGOUT" }),
   };
 
   return (
-    <AuthContext.Provider value={authDispatch}>
-      <MainLayout>
-        <Router>
-          <Switch>
-            <Route path="/" component={Posts} />
-            <Route path="/login" component={LogIn} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/post/:id/:permalink" component={Post} />
-          </Switch>
-        </Router>
-      </MainLayout>
+    <AuthContext.Provider value={authContext}>
+      <div className="app">
+        <AppRoutes />
+      </div>
     </AuthContext.Provider>
   );
 }

@@ -4,11 +4,11 @@ import Footer from "../components/Footer";
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="App container">
+    <>
       <Header />
-      <main>{children}</main>
+      <main className="app__body container py-5">{children}</main>
       <Footer />
-    </div>
+    </>
   );
 };
 

@@ -25,7 +25,7 @@ function App() {
             <Route path="/" component={Posts} />
             <Route path="/login" component={LogIn} />
             <Route path="/signup" component={SignUp} />
-            <Route path="/post/:permalink" component={Post} />
+            <Route path="/post/:id/:permalink" component={Post} />
           </Switch>
         </Router>
       </MainLayout>

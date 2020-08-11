@@ -14,7 +14,7 @@ const Posts = () => {
 
   return (
     <div className="posts">
-      <h2>Recent Posts</h2>
+      <h2 className="mb-3">Recent Posts</h2>
       {isLoading ? (
         <div class="spinner-border text-primary" role="status">
           <span class="sr-only">Loading posts...</span>

@@ -1,9 +1,233 @@
+html {
+  position: relative;
+  overflow-x: hidden;
+}
+body {
+  font-size: 14px;
+  font-weight: 400;
+  background: #fff;
+  color: #444444;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-font-smoothing: antialiased !important;
+  text-rendering: optimizelegibility !important;
+  letter-spacing: 0.02em;
+  -ms-word-wrap: break-word;
+  word-wrap: break-word;
+}
+
 a {
-  color: #555;
+  color: #3b4553;
 }
+
 a:hover {
-  color: rgb(62, 119, 184);
+  text-decoration: none;
 }
+
+div {
+  display: block;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.logo a,
+.footer-widget a.logo,
+.display-banner .banner-title,
+.content .title a,
+.article-author .author-name {
+  font-family: "Lora", serif !important;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.trans_200 {
+  -webkit-transition: all 200ms ease;
+  -moz-transition: all 200ms ease;
+  -ms-transition: all 200ms ease;
+  -o-transition: all 200ms ease;
+  transition: all 200ms ease;
+}
+
+/*
+   HEADER
+*/
+
+
+
+/*
+    POST
+*/
+.post-cover {
+	position: relative;
+    background: no-repeat center center;
+    background-color: #e3e7eb;
+    background-attachment: scroll;
+	background-size: cover;
+	min-height: 550px;
+}
+
+.post-heading {
+	position: relative;
+	width: 100%;
+	max-width: 940px;
+	margin: 0 auto 80px;
+	color: rgba(0,0,0,.9);
+}
+.post-heading  .category,
+.post-heading .published {
+	display: inline-block;
+	margin: 0;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-weight: normal;
+	
+}
+.post-heading .separator,
+.more-details .separator {
+	color: #aaa;
+	padding: 0px 7px;
+}
+.post-heading h1 {
+	margin-bottom: 0;
+	font-size: 4.1em;
+	line-height: 1;
+	font-weight: 700;
+}
+.post-heading  .summary {
+	font-size: 1.5em;
+	font-style: italic;
+	width: 70%;
+}
+.post-heading  .summary,
+.article-author .bio {
+	font-weight: 400;
+	color: #767983;
+	white-space: wrap;
+}
+.post-content {
+	padding-bottom: 2em;
+}
+.post-content,
+.article-actions,
+.author-box {
+	max-width: 750px;
+	margin: 0 auto;
+}
+.post-content:after
+{
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 10%;
+	height: 1px;
+	background: rgb(197, 197, 197);
+	content: '';
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5  {
+	font-size: 32px;
+	font-weight: 400;
+	margin-top: 40px;
+	margin-bottom: 20px;
+	color: #000;
+}
+
+.post-content p {
+	font-size: 18px;
+	margin:0;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align: justify;
+	background-color: white;
+}
+.post-content p:first-child {
+	margin-top: 0px;
+}
+.post-content p:first-child:first-letter {
+	float: left;
+	font-size: 3.8em;
+	margin: 0 .1em 0 0;
+	line-height: .8em;
+	color: #000;
+	font-weight:400;
+	font-family: 'Times New Roman', Times, serif;
+}
+.post-content p a {
+	display: inline-block;
+	font-weight: 400;
+	line-height: 1.4em;
+	border-bottom: 1px solid #000;
+	color: #000;
+}
+.post-content .blockquote {
+	font-size: 19px;
+	font-weight: 400;
+	color: #767983;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	padding: 17px 7px;
+	white-space: wrap;
+	-webkit-transform: translateY(3px);
+	-moz-transform: translateY(3px);
+	-ms-transform: translateY(3px);
+	-o-transform: translateY(3px);
+	transform: translateY(3px);
+}
+.post-content .blockquote:before
+{
+	display: block;
+	position: absolute;
+	top: 3px;
+	left: 0;
+	width: 8%;
+	height: 2px;
+	background: #46a5ff;
+	content: '';
+}
+.post-content .blockquote .source {
+	font-style: italic;
+	font-size: 16px;
+	font-weight: 400;
+	color: #a5a5a5;
+	margin-top: .5em;
+}
+.post-content .blockquote .source:before {
+	content: '— ';
+}
+
+.post-content .image-container {
+	width: 100vw;
+	max-width: 100vw;
+	margin: 35px 0;
+	margin-left: calc(50% - 50vw); /* Credit: https://codepen.io/webmandesign/post/gutenberg-full-width-alignment-in-wordpress-themes */
+}
+.post-content .image-container img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin: 0px auto;
+}
+.post-content .image-container .caption {
+	display: block;
+	padding: 5px 20px;
+	color: rgb(151, 151, 151);
+	text-align: center;
+}
+/*
+ Post
+*/
 
 footer {
   background-color: #333;

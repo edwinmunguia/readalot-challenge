@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PostCard from "../components/PostCard";
+import Loading from "../components/Loading";
 
 const Posts = () => {
   const [state, setState] = useState({ isLoading: true, postsList: [] });
@@ -13,12 +14,10 @@ const Posts = () => {
   }, []);
 
   return (
-    <div className="app__posts">
+    <section className="app__posts">
       <h2 className="mb-3">Recent Posts</h2>
       {state.isLoading ? (
-        <div className="spinner-border text-primary" role="status">
-          <span className="sr-only">Loading posts...</span>
-        </div>
+        <Loading message="loading posts, wait..." />
       ) : (
         <div className="row">
           {state.postsList.map((post) => (
@@ -36,7 +35,7 @@ const Posts = () => {
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

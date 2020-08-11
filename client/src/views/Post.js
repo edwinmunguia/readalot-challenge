@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const Post = () => {
   const { id } = useParams();
@@ -34,33 +35,76 @@ const Post = () => {
 
   return (
     <section className="app__post container py-3">
-      {state.isLoading ? (
-        <div className="spinner-border text-primary" role="status">
-          <span className="sr-only">Loading posts...</span>
-        </div>
-      ) : state.postExist ? (
-        <>
-          <div className="post__header">
-            <h1 className="post__title">{state.post.title}</h1>
-            <div className="post__image">
-              <img src={state.post.image} />
+      <div className="row justify-content-center">
+        {state.isLoading ? (
+          <Loading message="were loading something special for you, please, wait..." />
+        ) : state.postExist ? (
+          <>
+            <div class="post-heading">
+              {state.post.categories.length > 0 &&
+                state.post.categories.map((category, index) => (
+                  <NavLink
+                    className="mr-2"
+                    key={index}
+                    to={`/posts/tag/${category}`}
+                  >
+                    <span className="category">#{category}</span>
+                  </NavLink>
+                ))}
+              <span class="separator">&#8226;</span>
+              <span class="published">{state.post.date}</span>
+                <h1 class="mb-3">{state.post.title}</h1>
+              <div class="summary">
+              {state.post.summary}
+              </div>
             </div>
-          </div>
+            <div
+              className="post-cover"
+              style={{ backgroundImage: `url("${state.post.image}")` }}
+            ></div>
 
-          <div className="content">{state.post.summary}</div>
-          <div className="post__details">
-            <div className="post__details__tags">
-              {state.post.categories.map((category, index) => (
-                <NavLink key={index} to={`/posts/tag/${category}`}>{category}</NavLink>
-              ))}
+            <div class="post-content my-5">
+              <p>
+                Never in all their history have men been able truly to conceive
+                of the world as one: a single sphere, a globe, having the
+                qualities of a globe, a round earth in which all the directions
+                eventually meet, in which there is no center because every
+                point, or none, is center — an equal earth which all men occupy
+                as equals. The airman's earth, if free men make it, will be
+                truly round: a globe in practice, not in theory.
+              </p>
+
+              <h2>The Final Frontier</h2>
+
+              <blockquote class="blockquote">
+                The dreams of yesterday are the hopes of today and the reality
+                of tomorrow. Science has not yet mastered prophecy. We predict
+                too much for the next year and yet far too little for the next
+                ten.
+                <div class="source">Edwin J. Munguia</div>
+              </blockquote>
+
+              <div class="image-container">
+                <a href="/">
+                  <img
+                    src="https://blackrockdigital.github.io/startbootstrap-clean-blog/img/post-sample-image.jpg"
+                    alt=""
+                  />
+                </a>
+                <span class="caption text-muted">
+                  To go places and do things that have never been done before –
+                  that’s what living is all about.
+                </span>
+              </div>
             </div>
+          </>
+        ) : (
+          <div className="error-message">
+            <h3>An eror occurred</h3>
+            <p>{state.errorMessage}</p>
           </div>
-        </>
-      ) : (
-        <div>
-          <p>{state.errorMessage}</p>
-        </div>
-      )}
+        )}
+      </div>
     </section>
   );
 };

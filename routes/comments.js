@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const pool = require("../database");
-const generateError = require("../utils");
+const utils = require("../utils");
+const { validateCommentData } = require("../datavalidation");
 
 /**
  * Retrieve post's comments list
@@ -16,7 +17,7 @@ router.get("/post/:id", async (req, res) => {
 
   //Error. The post doesn't exist
   if (result.rowCount < 1)
-    res.status(404).json(generateError("The post doesn't exist."));
+    res.status(404).json(utils.generateError("The post doesn't exist."));
 
   //Otherwise, let's send comments list
   const { rows } = await pool.query("SELECT * FROM comments WHERE post=$1", [
@@ -35,7 +36,8 @@ router.get("/", async (req, res) => {
   const { error } = validateCommentData({ post, comment });
 
   //Let's check if there is an error
-  if (error) res.status(400).json(generateError(error.details[0].message));
+  if (error)
+    res.status(400).json(utils.generateError(error.details[0].message));
 
   //Let's verify the current post exist
   const postExist = await pool.query(
@@ -45,7 +47,7 @@ router.get("/", async (req, res) => {
 
   //Error. The post doesn't exist
   if (result.rowCount < 1)
-    res.status(404).json(generateError("The post doesn't exist."));
+    res.status(404).json(utils.generateError("The post doesn't exist."));
 
   //Otherwise, let's send comments list
   const {
@@ -57,3 +59,5 @@ router.get("/", async (req, res) => {
 
   res.json(rows);
 });
+
+module.exports = router;

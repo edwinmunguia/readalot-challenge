@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const pool = require("../database");
-const generateError = require("../utils");
+const utils = require("../utils");
 
 /**
  * Retrieve posts list
@@ -19,7 +19,7 @@ router.get("/:id", async (req, res) => {
     id,
   ]);
   if (result.rowCount > 0) res.json(result.rows);
-  else res.json(generateError("This post doesn't exist."));
+  else res.json(utils.generateError("This post doesn't exist."));
 });
 
 module.exports = router;

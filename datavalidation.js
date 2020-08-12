@@ -12,13 +12,9 @@ const validateLoginData = (data) => {
 const validateRegisterData = (data) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.pattern(/^[\S]{3,30}$/),
+    password: Joi.pattern(/^[\S]{6,30}$/),
     repeatPassword: Joi.ref("password"),
-    username: Joi.string()
-    .alphanum()
-    .min(3)
-    .max(30)
-    .required(),
+    username: Joi.string().alphanum().min(3).max(15).required(),
   });
 
   return schema.validate(data);
@@ -27,13 +23,14 @@ const validateRegisterData = (data) => {
 const validateCommentData = (data) => {
   const schema = Joi.object({
     post: Joi.number().required(),
-    comment: Joi.string().min(2).required()
+    comment: Joi.string().min(2).required(),
   });
 
   return schema.validate(data);
 };
 
-
-module.exports = validateLoginData;
-module.exports = validateRegisterData;
-module.exports = validateCommentData;
+module.exports = {
+  validateLoginData,
+  validateRegisterData,
+  validateCommentData,
+};

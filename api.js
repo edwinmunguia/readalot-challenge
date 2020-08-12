@@ -9,19 +9,18 @@ const app = express();
 const port = process.env.PORT || 9090;
 
 app.use(express.json());
-
 /**
- * Authentication
+ * Authentication EndPoint
  */
 app.use("/api/auth", authRoutes);
 
 /**
- * Post
+ * Posts EndPoint
  */
 app.use("/api/posts", postsRoutes);
 
 /**
- * Post
+ * Comments EndPoint
  */
 app.use("/api/comments", commentsRoutes);
 

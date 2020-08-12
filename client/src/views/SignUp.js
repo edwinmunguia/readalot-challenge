@@ -1,4 +1,5 @@
 import React from "react";
+import { useFormik } from "formik";
 
 const SignUp = () => {
   const validate = (values) => {
@@ -30,8 +31,8 @@ const SignUp = () => {
 
     //Check for the password
     if (!values.repeatPassword || values.repeatPassword !== values.password) {
-        errors.repeatPassword = "The password must be the same";
-      }
+      errors.repeatPassword = "The password must be the same";
+    }
 
     return errors;
   };

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
+import axios from "axios";
 import Loading from "../components/Loading";
+import Message from "../components/Message";
 
 const Post = () => {
   const { id } = useParams();
@@ -13,8 +15,8 @@ const Post = () => {
 
   useEffect(() => {
     (async () => {
-      const result = await fetch(`/api/posts/${id}`);
-      const data = await result.json(result);
+      const response = await axios.get(`/api/posts/${id}`);
+      const data = await response.data;
       if (!data.error) {
         const categories = data.categories
           .split(",")
@@ -53,10 +55,8 @@ const Post = () => {
                 ))}
               <span class="separator">&#8226;</span>
               <span class="published">{state.post.date}</span>
-                <h1 class="mb-3">{state.post.title}</h1>
-              <div class="summary">
-              {state.post.summary}
-              </div>
+              <h1 class="mb-3">{state.post.title}</h1>
+              <div class="summary">{state.post.summary}</div>
             </div>
             <div
               className="post-cover"
@@ -99,10 +99,11 @@ const Post = () => {
             </div>
           </>
         ) : (
-          <div className="app-message error w-50">
-            <h3 className="title">Bad news!</h3>
-            <p className="message">{state.errorMessage}</p>
-          </div>
+          <Message
+            title="Bad News!"
+            message={state.errorMessage}
+            type="error"
+          />
         )}
       </div>
     </section>

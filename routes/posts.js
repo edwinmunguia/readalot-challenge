@@ -19,7 +19,22 @@ router.get("/:id", async (req, res) => {
     id,
   ]);
   if (result.rowCount > 0) res.json(result.rows);
-  else res.json(utils.generateError("This post doesn't exist or has been removed."));
+  else
+    res.json(
+      utils.generateError("This post doesn't exist or has been removed.")
+    );
+});
+
+/**
+ * Create a new post
+ */
+router.post("/", async (req, res) => {
+  const { title, content, categories } = req.body;
+  const result = await pool.query(
+    "INSERT INTO posts (title, slug, summary, content, image, author, categories, published_on) VALUES($1, $2, $3, $4, $5, $6, $7, NOW())",
+    [title, slug, summary, content, image, author, categories]
+  );
+  res.json(result.rows);
 });
 
 module.exports = router;

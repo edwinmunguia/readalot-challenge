@@ -12,10 +12,6 @@ const SignUp = () => {
   const { loggedInUser, logInUser } = useContext(AuthContext);
   const history = useHistory();
 
-  if (loggedInUser.isLoggedIn) {
-    history.push("/");
-  }
-
   const formik = useFormik({
     initialValues: {
       username: "",

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostCard from "../components/PostCard";
 import Loading from "../components/Loading";
+import Message from "../components/Message";
 
 const Posts = () => {
   const [state, setState] = useState({ isLoading: true, postsList: [] });
@@ -14,36 +15,32 @@ const Posts = () => {
   }, []);
 
   return (
-    <section className="app__posts">
+    <section className="app__posts container">
       {state.isLoading ? (
         <Loading message="loading posts, wait..." />
-      ) : state.postsList.length > 0 ? (
+      ) : (
         <>
-          <h2 className="mb-3">Recent Posts</h2>
+          <h2 className="mb-3">Good reads!</h2>
           <div className="row">
-            {state.postsList.map((post) => (
-              <PostCard
-                key={post.id}
-                id={post.id}
-                slug={post.slug}
-                title={post.title}
-                image={post.image}
-                content={post.content}
-                category={post.category}
-                summary={post.summary}
-                date={post.date}
-              />
-            ))}
+            {state.postsList.length > 0 ? (
+              state.postsList.map((post) => (
+                <PostCard
+                  key={post.id}
+                  id={post.id}
+                  slug={post.slug}
+                  title={post.title}
+                  image={post.image}
+                  content={post.content}
+                  category={post.category}
+                  summary={post.summary}
+                  date={post.date}
+                />
+              ))
+            ) : (
+              <Message title="So sad!" message="It looks like nobody has written something yet. why not to be the first!" />
+            )}
           </div>
         </>
-      ) : (
-        <div className="app-message normal w-50 align-self-center">
-          <h3 className="title">So sad!</h3>
-          <p className="message">
-            It looks like nobody has written something yet. why not be the
-            first?
-          </p>
-        </div>
       )}
     </section>
   );

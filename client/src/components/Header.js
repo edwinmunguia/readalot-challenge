@@ -69,7 +69,7 @@ const Header = () => {
                     </a>
                     <ul class="dropdown-menu">
                     <li>
-                        <NavLink class="dropdown-item" to={`/profile/${loggedInUser.user.username}`}>
+                        <NavLink class="dropdown-item" to={`/profile/${loggedInUser.user.username}`} exact>
                           Profile
                         </NavLink>
                       </li>

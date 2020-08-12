@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import "bootstrap/dist/js/bootstrap.esm";
 import { AuthContext } from "./contexts/AuthContext";
 import { initialAuthReducer, authReducer } from "./reducers/authreducer";
@@ -9,6 +9,7 @@ import "./App.css";
 
 function App() {
   const [authState, authDispatch] = useReducer(authReducer, initialAuthReducer);
+  const [isLoaded, setIsLoaded] = useState(false);
   const authContext = {
     loggedInUser: authState,
     logInUser: (user, token) => {
@@ -23,15 +24,20 @@ function App() {
     if (authenticatedUser) {
       const { user, token } = authenticatedUser;
       authContext.logInUser(user, token);
+      setIsLoaded(true);
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <div className="app">
-        <AppRoutes />
-      </div>
-    </AuthContext.Provider>
+    <>
+      {isLoaded && (
+        <AuthContext.Provider value={authContext}>
+          <div className="app">
+            <AppRoutes />
+          </div>
+        </AuthContext.Provider>
+      )}
+    </>
   );
 }
 

@@ -9,7 +9,7 @@ import { authStorage } from "../utils/authstorage";
 const LogIn = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorFromServer, setErrorFromServer] = useState(null);
-  const { loggedInUser, logInUser } = useContext(AuthContext);
+  const { logInUser } = useContext(AuthContext);
   const history = useHistory();
 
   const formik = useFormik({
@@ -88,9 +88,15 @@ const LogIn = () => {
               </div>
             )}
           </div>
-          <button type="submit" className="btn btn-primary">
-            Log In
-          </button>
+          {!isProcessing ? (
+            <button type="submit" className="btn btn-primary">
+              Create
+            </button>
+          ) : (
+            <div className="spinner-border text-success mb-3" role="status">
+              <span className="sr-only">loading..</span>
+            </div>
+          )}
         </form>
       </div>
     </div>

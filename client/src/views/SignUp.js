@@ -1,42 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const SignUp = () => {
-  const validate = (values) => {
-    const errors = {};
-
-    //Validate the username
-    if (!values.username) {
-      errors.username = "Required";
-    } else if (!/^([A-Z][\w]+){3,15}$/i.test(values.username)) {
-      errors.username =
-        "Username must be at least 3 characters long. Must be alpha-numeric and can contain underscores (_)";
-    }
-
-    //Let's valiate the email
-    if (!values.email) {
-      errors.email = "Required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-    ) {
-      errors.email = "Invalid email address";
-    }
-
-    //Check for the password
-    if (!values.password) {
-      errors.password = "Required";
-    } else if (values.password.length < 6) {
-      errors.password = "Password must be at least 6 characters long";
-    }
-
-    //Check for the password
-    if (!values.repeatPassword || values.repeatPassword !== values.password) {
-      errors.repeatPassword = "The password must be the same";
-    }
-
-    return errors;
-  };
-
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -44,7 +10,18 @@ const SignUp = () => {
       password: "",
       repeatPassword: "",
     },
-    validate,
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .min(3, "Must be at least 3 characters or more")
+        .max(15, "Must be 15 characters or less")
+        .required("Required"),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string().min(6, "Must be at least 6 characters or more"),
+      repeatPassword: Yup.string().oneOf(
+        [Yup.ref("password"), null],
+        "Passwords must match"
+      ),
+    }),
     onSubmit: (value) => {
       alert(value);
     },
@@ -53,17 +30,17 @@ const SignUp = () => {
   return (
     <div className="login row justify-content-center">
       <div className="col-11 col-md-6 card shadow-sm py-3 px-4 my-5">
-        <h3 className="mb-4">Authenticate</h3>
+        <h3 className="mb-4">Create account</h3>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
               Username
             </label>
             <input
-              type="email"
+              type="text"
               className="form-control"
-              id="email"
-              name="email"
+              id="username"
+              name="username"
               onChange={formik.handleChange}
               value={formik.values.username}
             />
@@ -87,40 +64,42 @@ const SignUp = () => {
               <div className="invalid-feedback">{formik.errors.email}</div>
             )}
           </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Password
-            </label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              name="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
-            />
-            {formik.errors.password && (
-              <div className="invalid-feedback">{formik.errors.password}</div>
-            )}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Repeat Password
-            </label>
-            <input
-              type="password"
-              className="form-control"
-              id="repeatPassword"
-              name="repeatPassword"
-              onChange={formik.handleChange}
-              value={formik.values.repeatPassword}
-            />
-            {formik.errors.password && (
-              <div className="invalid-feedback">{formik.errors.password}</div>
-            )}
+          <div className="row mb-3">
+            <div className="col-12 col-md-6">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                name="password"
+                onChange={formik.handleChange}
+                value={formik.values.password}
+              />
+              {formik.errors.password && (
+                <div className="invalid-feedback">{formik.errors.password}</div>
+              )}
+            </div>
+            <div className="col-12 col-md-6">
+              <label htmlFor="password" className="form-label">
+                Repeat Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="repeatPassword"
+                name="repeatPassword"
+                onChange={formik.handleChange}
+                value={formik.values.repeatPassword}
+              />
+              {formik.errors.password && (
+                <div className="invalid-feedback">{formik.errors.password}</div>
+              )}
+            </div>
           </div>
           <button type="submit" className="btn btn-primary">
-            Log In
+            Create
           </button>
         </form>
       </div>

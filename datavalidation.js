@@ -20,4 +20,13 @@ const validateRegisterData = (data) => {
   return schema.valid(data);
 };
 
-module.exports = { validateLoginData, validateRegisterData };
+const validateCommentData = (data) => {
+  const schema = Joi.object({
+    post: Joi.number().required(),
+    comment: Joi.string().min(1).required(),
+  });
+
+  return schema.valid(data);
+};
+
+module.exports = { validateLoginData, validateRegisterData, validateCommentData};

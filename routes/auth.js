@@ -4,7 +4,7 @@ const {
   validateLoginData,
   validateRegisterData,
 } = require("../datavalidation");
-const { hashPassword, generateError } = require("../utils");
+const { passwordsAreEqual, generateError } = require("../utils");
 
 /**
  * Authenticate an existing user
@@ -18,20 +18,27 @@ router.post("/login", async (req, res) => {
   //Let's check if there is an error
   if (error) res.status(400).json(generateError(error.details[0].message));
 
-  //No error. Let's hash the password to search for the user
-  const hashedPassword = await hashPassword(password);
-
   //Query for the user
-  const result = await pool.query(
-    `SELECT * FROM users WHERE email=${email} AND password=${hashedPassword} LIMIT 1`
-  );
+  const user = await pool.query("SELECT * FROM users WHERE email=$1 LIMIT 1", [
+    email,
+  ]);
 
   //Does the user exist?
-  if (result.rowCount > 0) res.json(result.rows);
-  else
-    res.json(
-      generateError("User doesn't exist or incorrect login information.")
-    );
+  if (user.rowCount < 1)
+    res.status(400).json(generateError("Email or Password incorrect."));
+
+  //Let's compare the passwords
+  const validPassword = await passwordsAreEqual(
+    password,
+    user.rows[0].password
+  );
+
+  //If passwords are not equal, let the user know
+  if (!validPassword)
+    res.status(400).json(generateError("Email or Password incorrect."));
+
+  //Welcome back!
+  res.json(result.rows);
 });
 
 /**
@@ -68,7 +75,7 @@ router.post("/signup", async (req, res) => {
     [email]
   );
 
-  //If already exist
+  //If email already exist
   if (emailCheck.rowCount > 0)
     res
       .status(400)
@@ -82,13 +89,13 @@ router.post("/signup", async (req, res) => {
     `INSERT INTO users (uid, username, email, password, registeredOn) VALUES($1, $2, $3, $4, NOW())`,
     [uid, username, email, hashedPassword]
   );
+
   //Is everything Ok?
-  if (result) {
+  if (result)
     res.json({
       success: "The account was created successfully",
       user: { uid, username, email },
     });
-  }
 });
 
 module.exports = router;

@@ -7,6 +7,10 @@ const hashPassword = async (password) => {
   return hashPassword;
 };
 
+//Helper function to compare passwords
+const passwordsAreEqual = async (password, hashedPassword) =>
+  bcrypt.compare(password, hashedPassword);
+
 //Helper function to create error messsages
 const generateError = (message) => ({
   error: message,
@@ -14,3 +18,4 @@ const generateError = (message) => ({
 
 module.exports = hashPassword;
 module.exports = generateError;
+module.exports = passwordsAreEqual;

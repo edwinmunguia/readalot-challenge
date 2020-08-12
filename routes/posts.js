@@ -14,8 +14,10 @@ router.get("/", async (req, res) => {
  * Retrieve a single post
  */
 router.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  const result = await pool.query(`SELECT * FROM posts WHERE id=${id} LIMIT 1`);
+  const id = Number(req.params.id);
+  const result = await pool.query("SELECT * FROM posts WHERE id=$1 LIMIT 1", [
+    id,
+  ]);
   if (result.rowCount > 0) res.json(result.rows);
   else res.json(generateError("This post doesn't exist."));
 });

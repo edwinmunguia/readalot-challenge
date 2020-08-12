@@ -19,7 +19,7 @@ router.get("/:id", async (req, res) => {
     id,
   ]);
   if (result.rowCount > 0) res.json(result.rows);
-  else res.json(utils.generateError("This post doesn't exist."));
+  else res.json(utils.generateError("This post doesn't exist or has been removed."));
 });
 
 module.exports = router;

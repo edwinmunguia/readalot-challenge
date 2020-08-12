@@ -15,24 +15,34 @@ const Posts = () => {
 
   return (
     <section className="app__posts">
-      <h2 className="mb-3">Recent Posts</h2>
       {state.isLoading ? (
         <Loading message="loading posts, wait..." />
+      ) : state.postsList.length > 0 ? (
+        <>
+          <h2 className="mb-3">Recent Posts</h2>
+          <div className="row">
+            {state.postsList.map((post) => (
+              <PostCard
+                key={post.id}
+                id={post.id}
+                slug={post.slug}
+                title={post.title}
+                image={post.image}
+                content={post.content}
+                category={post.category}
+                summary={post.summary}
+                date={post.date}
+              />
+            ))}
+          </div>
+        </>
       ) : (
-        <div className="row">
-          {state.postsList.map((post) => (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              slug={post.slug}
-              title={post.title}
-              image={post.image}
-              content={post.content}
-              category={post.category}
-              summary={post.summary}
-              date={post.date}
-            />
-          ))}
+        <div className="app-message normal w-50 align-self-center">
+          <h3 className="title">So sad!</h3>
+          <p className="message">
+            It looks like nobody has written something yet. why not be the
+            first?
+          </p>
         </div>
       )}
     </section>

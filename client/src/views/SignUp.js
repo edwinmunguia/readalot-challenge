@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import { AuthContext } from "../contexts/AuthContext";
+import { authStorage } from "../utils/authstorage";
 
 const SignUp = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorFromServer, setErrorFromServer] = useState(null);
+  const { loggedInUser, logInUser } = useContext(AuthContext);
+  const history = useHistory();
+
+  if (loggedInUser.isLoggedIn) {
+    history.push("/");
+  }
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -14,16 +27,31 @@ const SignUp = () => {
       username: Yup.string()
         .min(3, "Must be at least 3 characters or more")
         .max(15, "Must be 15 characters or less")
-        .required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().min(6, "Must be at least 6 characters or more"),
-      repeatPassword: Yup.string().oneOf(
-        [Yup.ref("password"), null],
-        "Passwords must match"
-      ),
+        .required("The username is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("The email is required"),
+      password: Yup.string()
+        .min(6, "Must be at least 6 characters or more")
+        .required("Please, provide a valid password"),
+      repeatPassword: Yup.string()
+        .required("Passwords must match")
+        .oneOf([Yup.ref("password"), null], "Passwords must match"),
     }),
-    onSubmit: (value) => {
-      alert(value);
+    onSubmit: async (formData) => {
+      setIsProcessing(true);
+      const response = await axios.post("/api/auth/signup", formData);
+      const data = await response.data;
+
+      if (!data.error) {
+        logInUser(data.user, data.token);
+        authStorage.save(data.user, data.token);
+        setIsProcessing(false);
+        history.push("/");
+      } else {
+        setErrorFromServer(data.error);
+        setIsProcessing(false);
+      }
     },
   });
 
@@ -31,6 +59,11 @@ const SignUp = () => {
     <div className="login row justify-content-center">
       <div className="col-11 col-md-6 card shadow-sm py-3 px-4 my-5">
         <h3 className="mb-4">Create account</h3>
+        {errorFromServer && (
+          <div className="alert alert-danger" role="alert">
+            {errorFromServer}
+          </div>
+        )}
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
@@ -45,7 +78,9 @@ const SignUp = () => {
               value={formik.values.username}
             />
             {formik.errors.email && (
-              <div className="invalid-feedback">{formik.errors.email}</div>
+              <div className="d-block invalid-feedback">
+                {formik.errors.username}
+              </div>
             )}
           </div>
           <div className="mb-3">
@@ -61,7 +96,9 @@ const SignUp = () => {
               value={formik.values.email}
             />
             {formik.errors.email && (
-              <div className="invalid-feedback">{formik.errors.email}</div>
+              <div className="d-block invalid-feedback">
+                {formik.errors.email}
+              </div>
             )}
           </div>
           <div className="row mb-3">
@@ -78,7 +115,9 @@ const SignUp = () => {
                 value={formik.values.password}
               />
               {formik.errors.password && (
-                <div className="invalid-feedback">{formik.errors.password}</div>
+                <div className="d-block invalid-feedback">
+                  {formik.errors.password}
+                </div>
               )}
             </div>
             <div className="col-12 col-md-6">
@@ -93,14 +132,22 @@ const SignUp = () => {
                 onChange={formik.handleChange}
                 value={formik.values.repeatPassword}
               />
-              {formik.errors.password && (
-                <div className="invalid-feedback">{formik.errors.password}</div>
+              {formik.errors.repeatPassword && (
+                <div className="d-block invalid-feedback">
+                  {formik.errors.repeatPassword}
+                </div>
               )}
             </div>
           </div>
-          <button type="submit" className="btn btn-primary">
-            Create
-          </button>
+          {!isProcessing ? (
+            <button type="submit" className="btn btn-primary">
+              Create
+            </button>
+          ) : (
+            <div className="spinner-border text-success mb-3" role="status">
+              <span className="sr-only">loading..</span>
+            </div>
+          )}
         </form>
       </div>
     </div>

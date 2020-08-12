@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 //Helper function to hash passwords
 const hashPassword = async (password) => {
@@ -15,4 +16,7 @@ const passwordsAreEqual = async (password, hashedPassword) => {
 //Helper function to create error messsages
 const generateError = (message = "") => ({ error: message });
 
-module.exports = { hashPassword, generateError, passwordsAreEqual };
+//Helper function to generate a token
+const generateToken = (data, secret) => jwt.sign(data, secret);
+
+module.exports = { hashPassword, generateError, passwordsAreEqual, generateToken};

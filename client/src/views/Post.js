@@ -99,9 +99,9 @@ const Post = () => {
             </div>
           </>
         ) : (
-          <div className="error-message">
-            <h3>An eror occurred</h3>
-            <p>{state.errorMessage}</p>
+          <div className="app-message error w-50">
+            <h3 className="title">Bad news!</h3>
+            <p className="message">{state.errorMessage}</p>
           </div>
         )}
       </div>

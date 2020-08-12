@@ -1,19 +1,44 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import { AuthContext } from "../contexts/AuthContext";
+import { authStorage } from "../utils/authstorage";
 
 const LogIn = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorFromServer, setErrorFromServer] = useState(null);
+  const { loggedInUser, logInUser } = useContext(AuthContext);
+  const history = useHistory();
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().min(6, "Must be at least 6 characters or more"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("You need to provide an email"),
+      password: Yup.string()
+        .min(6, "Must be at least 6 characters or more")
+        .required("Provide a valid password"),
     }),
-    onSubmit: (value) => {
-      alert(value);
+    onSubmit: async (formData) => {
+      setIsProcessing(true);
+      const response = await axios.post("/api/auth/login", formData);
+      const data = await response.data;
+
+      if (!data.error) {
+        logInUser(data.user, data.token);
+        authStorage.save(data.user, data.token);
+        setIsProcessing(false);
+        history.push("/");
+      } else {
+        setErrorFromServer(data.error);
+        setIsProcessing(false);
+      }
     },
   });
 
@@ -21,7 +46,12 @@ const LogIn = () => {
     <div className="login row justify-content-center">
       <div className="col-11 col-md-6 card shadow-sm py-3 px-4 my-5">
         <h3 className="mb-4">Authenticate</h3>
-        <form onSubmit={formik.handleSubmit} noValidate>
+        {errorFromServer && (
+          <div className="alert alert-danger" role="alert">
+            {errorFromServer}
+          </div>
+        )}
+        <form onSubmit={formik.handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
               Email address
@@ -35,7 +65,9 @@ const LogIn = () => {
               value={formik.values.email}
             />
             {formik.errors.email && (
-              <div className="invalid-feedback">{formik.errors.email}</div>
+              <div className="d-block invalid-feedback">
+                {formik.errors.email}
+              </div>
             )}
           </div>
           <div className="mb-3">
@@ -51,7 +83,9 @@ const LogIn = () => {
               value={formik.values.password}
             />
             {formik.errors.password && (
-              <div className="invalid-feedback">{formik.errors.password}</div>
+              <div className="d-block invalid-feedback">
+                {formik.errors.password}
+              </div>
             )}
           </div>
           <button type="submit" className="btn btn-primary">

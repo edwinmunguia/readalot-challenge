@@ -3,7 +3,7 @@ const Joi = require("@hapi/joi");
 const validateLoginData = (data) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.pattern(/^[\S]{3,30}$/),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9._]{3,30}$')),
   });
 
   return schema.validate(data);
@@ -12,7 +12,7 @@ const validateLoginData = (data) => {
 const validateRegisterData = (data) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.pattern(/^[\S]{6,30}$/),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9._]{6,30}$')),
     repeatPassword: Joi.ref("password"),
     username: Joi.string().alphanum().min(3).max(15).required(),
   });

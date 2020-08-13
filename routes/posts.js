@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const pool = require("../database");
 const utils = require("../utils");
+const verifyToken = require("../middlewares/verifytoken");
 
 /**
  * Retrieve posts list
@@ -28,13 +29,32 @@ router.get("/:id", async (req, res) => {
 /**
  * Create a new post
  */
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const { title, content, categories } = req.body;
-  const result = await pool.query(
-    "INSERT INTO posts (title, slug, summary, content, image, author, categories, published_on) VALUES($1, $2, $3, $4, $5, $6, $7, NOW())",
-    [title, slug, summary, content, image, author, categories]
-  );
-  res.json(result.rows);
+
+  try {
+    //Validate post data
+    const { error } = validateRegisterData({
+      title,
+      content,
+    });
+
+    //Is there and error? Let the user know it.
+    if (error)
+      res.status(400).json(utils.generateError(error.details[0].message));
+
+    const slug = utils.generateSlug(title);
+    const summary = utils.extractSummary(content, 240);
+    const image = content.match(/!\[.*?\]\((.*?)\)/)[1];
+
+    const result = await pool.query(
+      "INSERT INTO posts (title, slug, summary, content, image, author, categories, published_on) VALUES($1, $2, $3, $4, $5, $6, $7, NOW())",
+      [title, slug, summary, content, image, author, categories]
+    );
+    res.json(result.rows);
+  } catch (e) {
+    res.json(utils.generateError("Something went wrong, try again."));
+  }
 });
 
 module.exports = router;

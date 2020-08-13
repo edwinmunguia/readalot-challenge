@@ -61,7 +61,7 @@ const PostHandler = ({ mode, post, hasToLoad }) => {
             {mode === "new" ? "Add new post" : "Edit post"}
           </h2>
           <PostForm
-            initialData={mode === "edit" ? post : {}}
+            initialData={mode === "edit" ? state.post : {}}
             isProcessing={state.isProcessing}
             onSubmit={handlePostSubmit}
           />

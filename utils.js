@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const urlSlug = require("url-slug");
+const removeMd = require("remove-markdown");
 
 //Helper function to hash passwords
 const hashPassword = async (password) => {
@@ -19,4 +21,17 @@ const generateError = (message = "") => ({ error: message });
 //Helper function to generate a token
 const generateToken = (data, secret) => jwt.sign(data, secret);
 
-module.exports = { hashPassword, generateError, passwordsAreEqual, generateToken};
+//Helper function to generate url slug
+const generateSlug = (text) => urlSlug(text);
+
+//Helper function to extract summary
+const extractSummary = (text, length) => removeMd(text).substring(0, length);
+
+module.exports = {
+  hashPassword,
+  generateError,
+  passwordsAreEqual,
+  generateToken,
+  generateSlug,
+  extractSummary,
+};

@@ -8,6 +8,7 @@ import Message from "../components/Message";
 import { AuthContext } from "../contexts/AuthContext";
 import CustomPostImage from "../components/CustomPostImage";
 import CommentForm from "../components/CommentForm";
+import Comment from "../components/Comment";
 
 const renderers = {
   image: CustomPostImage,
@@ -26,7 +27,6 @@ const Post = () => {
 
   useEffect(() => {
     (async () => {
-      // const response = await axios.get(`/api/posts/${id}`);
       const responses = await Promise.all([
         axios.get(`/api/posts/${id}`),
         axios.get(`/api/comments/post/${id}`),
@@ -55,12 +55,18 @@ const Post = () => {
           ...state,
           isLoading: false,
           post: null,
+          comments: [],
           postExist: false,
           errorMessage: postData.error,
         });
       }
     })();
-  });
+  }, []);
+
+  const handleNewComment = (data) => {
+    const newCommentsList = [...state.comments, data];
+    setState({ ...state, comments: newCommentsList });
+  };
 
   return (
     <section className="app__post container py-3">
@@ -125,15 +131,25 @@ const Post = () => {
               />
             </div>
             <div className="comments row justify-content-center">
-              <div className="col-11 col-md-8">
+              <div className="col-11 col-md-7">
                 <h3>Post's comments</h3>
                 {loggedInUser.isLoggedIn ? (
-                <CommentForm />
-                ): (
-                  <div className="login-to-comment">You must log in to comment this post.</div>
+                  <CommentForm
+                    post={id}
+                    user={loggedInUser}
+                    onAddComment={handleNewComment}
+                  />
+                ) : (
+                  <div className="login-to-comment">
+                    You must log in to comment this post.
+                  </div>
                 )}
                 {state.comments.length > 0 ? (
-                  <div className="comments-list"></div>
+                  <div className="comments-list py-4">
+                    {state.comments.map((comment) => (
+                      <Comment key={comment.id} data={comment} />
+                    ))}
+                  </div>
                 ) : (
                   <div className="no-comments mt-4">No comments yet.</div>
                 )}

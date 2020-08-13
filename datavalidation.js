@@ -31,8 +31,7 @@ const validatePostData = (data) => {
 
 const validateCommentData = (data) => {
   const schema = Joi.object({
-    post: Joi.number().required(),
-    comment: Joi.string().min(2).required(),
+    comment: Joi.string().required(),
   });
 
   return schema.validate(data);

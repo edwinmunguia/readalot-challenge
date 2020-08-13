@@ -1,15 +1,72 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 
-const CommentForm = () => {
-  const [isProcessing, setIsProcessing] = useState(false);
+const CommentForm = ({ post, user, onAddComment }) => {
+  const [state, setState] = useState({
+    isProcessing: false,
+    errorFromServer: null,
+  });
   const comment = useRef(null);
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
 
-  }
+    if (comment.current.value.trim().length > 0) {
+      setState({
+        ...state,
+        isProcessing: true,
+      });
+
+      axios
+        .post(
+          `/api/comments`,
+          { post: post, comment: comment.current.value },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": user.token,
+            },
+          }
+        )
+        .then((result) => {
+          const data = result.data;
+          if (!data.error) {
+            onAddComment(data);
+            setState({
+              ...state,
+              isProcessing: false,
+              errorFromServer: null,
+            });
+          } else {
+            setState({
+              ...state,
+              isProcessing: false,
+              errorFromServer: data.error,
+            });
+          }
+        })
+        .catch((err) => {
+          setState({
+            ...state,
+            isProcessing: false,
+          });
+
+        });
+    } else {
+      comment.current.focus();
+    }
+  };
+
   return (
-    <form className="comment-form p-2 bg-light rounded" onSubmit={handleFormSubmit}>
+    <form
+      className="comment-form p-2 bg-light rounded"
+      onSubmit={handleFormSubmit}
+    >
+      {state.errorFromServer && (
+        <div className="alert alert-danger" role="alert">
+          {state.errorFromServer}
+        </div>
+      )}
       <div className="mb-2">
         <textarea
           className="form-control"
@@ -20,7 +77,7 @@ const CommentForm = () => {
         />
       </div>
       <div>
-        {!isProcessing ? (
+        {!state.isProcessing ? (
           <button type="submit" className="btn btn-primary">
             Add comment
           </button>

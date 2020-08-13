@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, NavLink } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
+import ReactMarkdown from "react-markdown";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Post = () => {
   const { id } = useParams();
+  const { loggedInUser } = useContext(AuthContext);
   const [state, setState] = useState({
     isLoading: true,
     post: {},
@@ -17,10 +21,11 @@ const Post = () => {
     (async () => {
       const response = await axios.get(`/api/posts/${id}`);
       const data = await response.data;
+
       if (!data.error) {
-        const categories = data.categories
+        const categories = data.categories.length > 0 ? data.categories
           .split(",")
-          .map((item) => item.trim().toLowerCase());
+          .map((item) => item.trim().toLowerCase()) : [];
         const post = { ...data, categories };
         setState({ ...state, isLoading: false, post, postExist: true });
       } else {
@@ -54,7 +59,28 @@ const Post = () => {
                   </NavLink>
                 ))}
               <span class="separator">&#8226;</span>
-              <span class="published">{state.post.date}</span>
+              <span class="published">
+                {moment(state.post.published_on).format("MMM D, yyyy")}
+              </span>
+              {loggedInUser.isLoggedIn &&
+                loggedInUser.user.id === state.post.author_id && (
+                  <>
+                    <span class="separator">&#8226;</span>
+                    <NavLink
+                      className="mr-2"
+                      to={`/posts/edit/${state.post.id}`}
+                    >
+                      <span className="btn btn-link px-0">Edit post</span>
+                    </NavLink>
+                    <span class="separator">&#8226;</span>
+                    <button
+                      className="btn btn-link mr-2 px-0"
+                      to={`/posts/edit/${state.post.id}`}
+                    >
+                      <span className="edit">Delete post</span>
+                    </button>
+                  </>
+                )}
               <h1 class="mb-3">{state.post.title}</h1>
               <div class="summary">{state.post.summary}</div>
             </div>
@@ -64,38 +90,7 @@ const Post = () => {
             ></div>
 
             <div class="post-content my-5">
-              <p>
-                Never in all their history have men been able truly to conceive
-                of the world as one: a single sphere, a globe, having the
-                qualities of a globe, a round earth in which all the directions
-                eventually meet, in which there is no center because every
-                point, or none, is center — an equal earth which all men occupy
-                as equals. The airman's earth, if free men make it, will be
-                truly round: a globe in practice, not in theory.
-              </p>
-
-              <h2>The Final Frontier</h2>
-
-              <blockquote class="blockquote">
-                The dreams of yesterday are the hopes of today and the reality
-                of tomorrow. Science has not yet mastered prophecy. We predict
-                too much for the next year and yet far too little for the next
-                ten.
-                <div class="source">Edwin J. Munguia</div>
-              </blockquote>
-
-              <div class="image-container">
-                <a href="/">
-                  <img
-                    src="https://blackrockdigital.github.io/startbootstrap-clean-blog/img/post-sample-image.jpg"
-                    alt=""
-                  />
-                </a>
-                <span class="caption text-muted">
-                  To go places and do things that have never been done before –
-                  that’s what living is all about.
-                </span>
-              </div>
+              <ReactMarkdown source={state.post.content} />
             </div>
           </>
         ) : (

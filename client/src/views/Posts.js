@@ -10,6 +10,7 @@ const Posts = () => {
     (async () => {
       const result = await fetch("/api/posts");
       const data = await result.json();
+      console.log(data);
       setState({ ...state, postsList: data, isLoading: false });
     })();
   }, []);
@@ -23,21 +24,12 @@ const Posts = () => {
           <h2 className="mb-3">Good reads!</h2>
           <div className="row">
             {state.postsList.length > 0 ? (
-              state.postsList.map((post) => (
-                <PostCard
-                  key={post.id}
-                  id={post.id}
-                  slug={post.slug}
-                  title={post.title}
-                  image={post.image}
-                  content={post.content}
-                  category={post.category}
-                  summary={post.summary}
-                  date={post.date}
-                />
-              ))
+              state.postsList.map((post) => <PostCard post={post} />)
             ) : (
-              <Message title="So sad!" message="It looks like nobody has written something yet. why not to be the first!" />
+              <Message
+                title="So sad!"
+                message="It looks like nobody has written something yet. why not to be the first!"
+              />
             )}
           </div>
         </>

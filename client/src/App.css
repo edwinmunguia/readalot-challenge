@@ -37,11 +37,7 @@ h2,
 h3,
 h4,
 h5,
-.logo a,
-.footer-widget a.logo,
-.display-banner .banner-title,
-.content .title a,
-.article-author .author-name {
+.navbar-brand {
   font-family: "Lora", serif !important;
 }
 ul,
@@ -86,6 +82,16 @@ header.navbar .nav-link.publish:hover,
 header.navbar .nav-link.publish.active {
   background-color: #1ebb55;
   color: #fff!important;
+}
+
+/*
+	POSTS CARD
+*/
+.cardlink {
+    text-decoration: none;
+}
+.cardlink:hover {
+    color: #000;
 }
 
 /*
@@ -275,10 +281,17 @@ header.navbar .nav-link.publish.active {
 	color: #3d7365;
 }
 
-
-
 footer {
   background-color: #333;
   color: #fff;
   padding: 40px 0;
+}
+
+
+/*
+	BOOTSTRAP COMPONENTS
+*/
+
+.card {
+	border: none;
 }

@@ -1,25 +1,47 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./PostCard.css";
+import moment from "moment";
 
-const PostCard = ({ id, slug, image, title, category, date, summary }) => {
+const PostCard = ({ post }) => {
   return (
-    <NavLink className="col-12 col-md-4 cardlink" to={`/post/${id}/${slug}`} exact>
-      <div className="card shadow-sm mb-3">
-        <div className="row g-0">
-          <div className="col-md-4">
-            <img src={image} alt={slug} />
+    <NavLink
+      className="col-12 col-md-4 cardlink "
+      to={`/post/${post.id}/${post.slug}`}
+      exact
+    >
+      <div className="card shadow rounded mb-4">
+        {post.image.length > 0 && (
+          <img src={post.image} class="card-img-top" alt={post.slug} />
+        )}
+        <div className="card-body">
+          <h4 className="card-title">{post.title}</h4>
+          <div className="py-1">
+            {post.categories.length > 0 &&
+              post.categories
+                .split(",")
+                .map((item) => (
+                  <small className="text-muted mr-1">
+                    #{item.trim().toLowerCase()}
+                  </small>
+                ))}
           </div>
-          <div className="col-md-8">
-            <div className="card-body">
-              <h5 className="card-title">{title}</h5>
-              <p className="card-text">{summary}</p>
-              <p className="card-text">
-                <small className="text-muted">{category}</small> &middot;
-                <small className="text-muted">{date}</small>
-              </p>
-            </div>
+          <p className="card-text">{post.summary}</p>
+        </div>
+        <div className="card-body d-flex justify-content-between">
+          <div className="author">
+            <NavLink
+              className="author-link"
+              to={`/profile/${post.author_id}`}
+              exact
+            >
+              {post.author_username}
+            </NavLink>
           </div>
+          <p className="card-text">
+            <small className="text-muted">
+              {moment(post.date).format("MMM D, yyyy")}
+            </small>
+          </p>
         </div>
       </div>
     </NavLink>

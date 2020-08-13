@@ -11,10 +11,12 @@
     "bootstrap": "5.0.0-alpha1",
     "firebase": "^7.17.2",
     "formik": "^2.1.5",
+    "moment": "^2.27.0",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.2",
     "yup": "^0.29.3"

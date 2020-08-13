@@ -2,12 +2,12 @@ import React from "react";
 import { useFormik, yupToFormErrors } from "formik";
 import * as Yup from "yup";
 
-const PostForm = ({onSubmit, isProcessing}) => {
+const PostForm = ({initialData, onSubmit, isProcessing}) => {
   const formik = useFormik({
     initialValues: {
-      title: "",
-      content: "",
-      categories: "",
+      title: initialData.title,
+      content: initialData.content,
+      categories: initialData.categories,
     },
     validateonChange: false,
     validateOnBlur: false,
@@ -29,13 +29,13 @@ const PostForm = ({onSubmit, isProcessing}) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div class="mb-4">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-4">
+        <label htmlFor="title" className="form-label">
           Title
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="title"
           name="title"
           value={formik.values.title}
@@ -46,14 +46,14 @@ const PostForm = ({onSubmit, isProcessing}) => {
           <div className="d-block invalid-feedback">{formik.errors.title}</div>
         )}
       </div>
-      <div class="mb-4">
+      <div className="mb-4">
         {formik.errors.content && (
           <div className="d-block invalid-feedback">
             {formik.errors.content}
           </div>
         )}
         <textarea
-          class="form-control"
+          className="form-control"
           id="content"
           name="content"
           value={formik.values.content}
@@ -61,13 +61,13 @@ const PostForm = ({onSubmit, isProcessing}) => {
           rows="7"
         />
       </div>
-      <div class="mb-4">
-        <label htmlFor="tags" class="form-label">
+      <div className="mb-4">
+        <label htmlFor="tags" className="form-label">
           Categories
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="categories"
           name="categories"
           value={formik.values.categories}

@@ -77,7 +77,7 @@ const PostForm = ({
           placeholder="E.g tutorial, review, code, cooking and so forth..."
         />
       </div>
-      <div className="mt-4 d-flex justify-content-between">
+      <div className="mt-4">
         {!isProcessing ? (
           <button type="submit" className="btn btn-primary">
             Publish

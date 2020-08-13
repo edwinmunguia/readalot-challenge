@@ -7,9 +7,10 @@ import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { AuthContext } from "../contexts/AuthContext";
 import CustomPostImage from "../components/CustomPostImage";
+import CommentForm from "../components/CommentForm";
 
 const renderers = {
-  image: CustomPostImage
+  image: CustomPostImage,
 };
 
 const Post = () => {
@@ -18,31 +19,44 @@ const Post = () => {
   const [state, setState] = useState({
     isLoading: true,
     post: {},
+    comments: [],
     postExist: false,
     errorMessage: "",
   });
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get(`/api/posts/${id}`);
-      const data = await response.data;
+      // const response = await axios.get(`/api/posts/${id}`);
+      const responses = await Promise.all([
+        axios.get(`/api/posts/${id}`),
+        axios.get(`/api/comments/post/${id}`),
+      ]);
 
-      if (!data.error) {
+      const postData = await responses[0].data;
+      const commentsData = await responses[1].data;
+
+      if (!postData.error) {
         const categories =
-          data.categories.length > 0
-            ? data.categories
+          postData.categories.length > 0
+            ? postData.categories
                 .split(",")
                 .map((item) => item.trim().toLowerCase())
             : [];
-        const post = { ...data, categories };
-        setState({ ...state, isLoading: false, post, postExist: true });
+        const post = { ...postData, categories };
+        setState({
+          ...state,
+          isLoading: false,
+          post,
+          comments: commentsData,
+          postExist: true,
+        });
       } else {
         setState({
           ...state,
           isLoading: false,
           post: null,
           postExist: false,
-          errorMessage: data.error,
+          errorMessage: postData.error,
         });
       }
     })();
@@ -90,7 +104,7 @@ const Post = () => {
                   </>
                 )}
               <h1 class="mb-3">{state.post.title}</h1>
-              <div class="summary">{state.post.summary}</div>
+              <div class="summary">{state.post.summary}...</div>
               <div className="author mt-4">
                 <NavLink to={`/profile/${state.post.author_username}`}>
                   <span className="category">
@@ -105,7 +119,25 @@ const Post = () => {
             ></div>
 
             <div class="post-content my-5">
-              <ReactMarkdown source={state.post.content} renderers={renderers} />
+              <ReactMarkdown
+                source={state.post.content}
+                renderers={renderers}
+              />
+            </div>
+            <div className="comments row justify-content-center">
+              <div className="col-11 col-md-8">
+                <h3>Post's comments</h3>
+                {loggedInUser.isLoggedIn ? (
+                <CommentForm />
+                ): (
+                  <div className="login-to-comment">You must log in to comment this post.</div>
+                )}
+                {state.comments.length > 0 ? (
+                  <div className="comments-list"></div>
+                ) : (
+                  <div className="no-comments mt-4">No comments yet.</div>
+                )}
+              </div>
             </div>
           </>
         ) : (

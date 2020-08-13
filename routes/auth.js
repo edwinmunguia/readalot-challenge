@@ -1,10 +1,12 @@
-const router = require("express").Router();
+const Router = require("express-promise-router");
 const pool = require("../database");
 const {
   validateLoginData,
   validateRegisterData,
 } = require("../datavalidation");
 const utils = require("../utils");
+
+const router = new Router();
 
 /**
  * Authenticate an existing user
@@ -17,7 +19,7 @@ router.post("/login", async (req, res) => {
     const { error } = validateLoginData({ email, password });
 
     //Let's check if there is an error
-    if (error) res.json(utils.generateError(error.details[0].message));
+    if (error) return res.json(utils.generateError(error.details[0].message));
 
     //Query for the user
     const user = await pool.query(
@@ -27,7 +29,7 @@ router.post("/login", async (req, res) => {
 
     //Does the user exist?
     if (user.rows.length < 1)
-      res.json(utils.generateError("Email or Password incorrect."));
+      return res.json(utils.generateError("Email or Password incorrect."));
 
     //Let's compare the passwords
     const validPassword = await utils.passwordsAreEqual(
@@ -37,7 +39,7 @@ router.post("/login", async (req, res) => {
 
     //If passwords are not equal, let the user know
     if (!validPassword)
-      res.json(utils.generateError("Email or Password incorrect."));
+      return res.json(utils.generateError("Email or Password incorrect."));
 
     //Welcome back!
     const loggedInUser = {
@@ -54,8 +56,7 @@ router.post("/login", async (req, res) => {
       token,
     });
   } catch (e) {
-    console.log(e);
-    res.json(utils.generateError("Something went wrong, try again."));
+    return res.json(utils.generateError("Something went wrong, try again."));
   }
 });
 
@@ -63,9 +64,9 @@ router.post("/login", async (req, res) => {
  * Create a new user
  */
 router.post("/signup", async (req, res) => {
-  const { username, email, password, repeatPassword } = req.body;
-
   try {
+    const { username, email, password, repeatPassword } = req.body;
+
     //time to validate the register data
     const { error } = validateRegisterData({
       username,
@@ -76,7 +77,9 @@ router.post("/signup", async (req, res) => {
 
     //Is there and error? Let the user know it.
     if (error)
-      res.status(400).json(utils.generateError(error.details[0].message));
+      return res
+        .status(400)
+        .json(utils.generateError(error.details[0].message));
 
     //Is there already an user with this username?
     const usernameCheck = await pool.query(
@@ -86,7 +89,7 @@ router.post("/signup", async (req, res) => {
 
     //If already Exist
     if (usernameCheck.rows.length > 0)
-      res.json(utils.generateError("This username is already taken."));
+      return res.json(utils.generateError("This username is already taken."));
 
     //Is there already an user with this email?
     const emailCheck = await pool.query(
@@ -96,10 +99,12 @@ router.post("/signup", async (req, res) => {
 
     //If email already exist
     if (emailCheck.rows.length > 0)
-      res.json(utils.generateError("There is already an account with this email."));
+      return res.json(
+        utils.generateError("There is already an account with this email.")
+      );
 
     //No error. let's hash the password before saving the new user.
-    const hashedPassword = await utils.hashPassword(password);
+    const hashedPassword = utils.hashPassword(password);
 
     //Save the world! :'D
     const result = await pool.query(
@@ -107,19 +112,16 @@ router.post("/signup", async (req, res) => {
       [username, email, hashedPassword]
     );
 
-    //Is everything Ok?
-    if (result) {
-      const newUser = { id: result.rows[0].id, username, email };
-      const token = utils.generateToken(newUser, "acklenavenue");
-      res.json({
-        success: "The account was created successfully",
-        user: newUser,
-        token,
-      });
-    }
+    //Is everything Ok? Let's auth the user.
+    const newUser = { id: result.rows[0].id, username, email };
+    const token = utils.generateToken(newUser, "acklenavenue");
+    res.json({
+      success: "The account was created successfully",
+      user: newUser,
+      token,
+    });
   } catch (e) {
-    console.log(e);
-    res.json(utils.generateError("Something went wrong, try again."));
+    return res.json(utils.generateError("Something went wrong, try again."));
   }
 });
 

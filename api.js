@@ -11,7 +11,7 @@ app.use(express.json());
 /**
  * Authentication EndPoint
  */
-// app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 /**
  * Posts EndPoint
@@ -21,18 +21,17 @@ app.use("/api/posts", postsRoutes);
 /**
  * Comments EndPoint
  */
-// app.use("/api/comments", commentsRoutes);
-
+app.use("/api/comments", commentsRoutes);
 
 /**
  * Serving our Frontend
  */
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static("client/build"));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
 
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-//   });
-// }
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+}
 
 app.listen(port, () => console.log(`Up and running on port ${port}...`));

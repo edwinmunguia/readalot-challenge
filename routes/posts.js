@@ -1,7 +1,7 @@
 const Router = require("express-promise-router");
 const pool = require("../database");
 const utils = require("../utils");
-const { validatePostData, validateLoginData } = require("../datavalidation");
+const { validatePostData } = require("../datavalidation");
 const verifyToken = require("../middlewares/verifytoken");
 
 const router = new Router();
@@ -10,21 +10,24 @@ const router = new Router();
  * Retrieve posts list
  */
 router.get("/", async (req, res) => {
-  const result = await pool.query(
-    "SELECT p.id, p.title, p.slug, p.content, p.summary, p.image, " +
-      "p.categories, p.published_on, u.id as author_id, u.username as author_username " +
-      "FROM posts p LEFT JOIN users u ON p.author = u.id ORDER BY id DESC"
-  );
-  return res.json(result.rows);
+  try {
+    const result = await pool.query(
+      "SELECT p.id, p.title, p.slug, p.content, p.summary, p.image, " +
+        "p.categories, p.published_on, u.id as author_id, u.username as author_username " +
+        "FROM posts p LEFT JOIN users u ON p.author = u.id ORDER BY id DESC"
+    );
+    return res.json(result.rows);
+  } catch (err) {
+    return res.json(utils.generateError("Something went wrong, try again."));
+  }
 });
 
 /**
  * Retrieve all posts from a user
  */
 router.get("/user/:username", async (req, res) => {
-  const { username } = req.params;
-
   try {
+    const { username } = req.params;
     //Validate the username
     if (username.length < 1)
       return res.json(utils.generateError("Invalid username."));
@@ -47,7 +50,7 @@ router.get("/user/:username", async (req, res) => {
     );
     return res.json(result.rows);
   } catch (e) {
-    res.json(utils.generateError("Something went wrong, try again."));
+    return res.json(utils.generateError("Something went wrong, try again."));
   }
 });
 
@@ -55,18 +58,22 @@ router.get("/user/:username", async (req, res) => {
  * Retrieve a single post
  */
 router.get("/:id", async (req, res) => {
-  const id = Number(req.params.id);
-  const result = await pool.query(
-    "SELECT p.id, p.title, p.slug, p.content, p.summary, p.image, " +
-      "p.categories, p.published_on, u.id as author_id, u.username as author_username " +
-      "FROM posts p LEFT JOIN users u ON p.author = u.id WHERE p.id=$1 LIMIT 1",
-    [id]
-  );
-  if (result.rows.length > 0) return res.json(result.rows[0]);
-  else
-    return res.json(
-      utils.generateError("This post doesn't exist or has been removed.")
+  try {
+    const id = Number(req.params.id);
+    const result = await pool.query(
+      "SELECT p.id, p.title, p.slug, p.content, p.summary, p.image, " +
+        "p.categories, p.published_on, u.id as author_id, u.username as author_username " +
+        "FROM posts p LEFT JOIN users u ON p.author = u.id WHERE p.id=$1 LIMIT 1",
+      [id]
     );
+    if (result.rows.length > 0) return res.json(result.rows[0]);
+    else
+      return res.json(
+        utils.generateError("This post doesn't exist or has been removed.")
+      );
+  } catch (err) {
+    return res.json(utils.generateError("Something went wrong, try again."));
+  }
 });
 
 /**
@@ -109,7 +116,7 @@ router.post("/", verifyToken, async (req, res, next) => {
       categories,
     });
   } catch (err) {
-    console.error(err.message);
+    return res.json(utils.generateError("Something went wrong, try again."));
   }
 });
 
@@ -124,7 +131,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
 
     if (id < 0)
       return res.json(
-        utils.generateError("Something went wrong, try to reload the page.")
+        utils.generateError("Invalid post ID.")
       );
 
     //Validate post data
@@ -160,7 +167,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
       author: authorId,
     });
   } catch (err) {
-    console.error(err.message);
+    return res.json(utils.generateError("Something went wrong, try again."));
   }
 });
 

@@ -19,13 +19,14 @@ function App() {
   };
 
   useEffect(() => {
+    document.title = "Read a Lot: Good reads everyday!";
     //Verify user session in local storage
     const authenticatedUser = authStorage.get();
     if (authenticatedUser) {
       const { user, token } = authenticatedUser;
       authContext.logInUser(user, token);
-      setIsLoaded(true);
     }
+    setIsLoaded(true);
   }, []);
 
   return (

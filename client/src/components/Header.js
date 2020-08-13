@@ -54,7 +54,7 @@ const Header = () => {
                       aria-current="page"
                       to="/posts/new"
                     >
-                      Publish
+                      New article
                     </NavLink>
                   </li>
                   <li class="nav-item dropdown">

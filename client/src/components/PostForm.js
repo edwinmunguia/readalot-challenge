@@ -2,7 +2,11 @@ import React from "react";
 import { useFormik, yupToFormErrors } from "formik";
 import * as Yup from "yup";
 
-const PostForm = ({initialData, onSubmit, isProcessing}) => {
+const PostForm = ({
+  initialData = { title: "", content: "", categories: "" },
+  onSubmit,
+  isProcessing,
+}) => {
   const formik = useFormik({
     initialValues: {
       title: initialData.title,
@@ -23,9 +27,7 @@ const PostForm = ({initialData, onSubmit, isProcessing}) => {
     onSubmit: (formData) => onSubmit(formData),
   });
 
-  const handlePostType = ()=> {
-
-  };
+  const handlePostType = () => {};
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -58,7 +60,7 @@ const PostForm = ({initialData, onSubmit, isProcessing}) => {
           name="content"
           value={formik.values.content}
           onChange={formik.handleChange}
-          rows="7"
+          rows="13"
         />
       </div>
       <div className="mb-4">
@@ -76,15 +78,15 @@ const PostForm = ({initialData, onSubmit, isProcessing}) => {
         />
       </div>
       <div className="mt-4 d-flex justify-content-between">
-      {!isProcessing ? (
-            <button type="submit" className="btn btn-primary">
-              Publish
-            </button>
-          ) : (
-            <div className="spinner-border text-success mb-3" role="status">
-              <span className="sr-only">loading..</span>
-            </div>
-          )}
+        {!isProcessing ? (
+          <button type="submit" className="btn btn-primary">
+            Publish
+          </button>
+        ) : (
+          <div className="spinner-border text-success mb-3" role="status">
+            <span className="sr-only">loading..</span>
+          </div>
+        )}
       </div>
     </form>
   );

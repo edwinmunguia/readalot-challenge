@@ -1,4 +1,4 @@
-const { Pool } = require("pg");
+const Pool = require("pg").Pool;
 let connection = null;
 if (process.env.NODE_ENV === "production") {
   connection = {
@@ -14,6 +14,12 @@ if (process.env.NODE_ENV === "production") {
   };
 }
 
-const pool = new Pool(connection);
+const pool = new Pool({
+  host: "localhost",
+  user: "postgres",
+  database: "readalot",
+  password: "munguia",
+  port: "2222",
+});
 
 module.exports = pool;

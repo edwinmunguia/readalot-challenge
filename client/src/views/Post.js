@@ -6,6 +6,11 @@ import ReactMarkdown from "react-markdown";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { AuthContext } from "../contexts/AuthContext";
+import CustomPostImage from "../components/CustomPostImage";
+
+const renderers = {
+  image: CustomPostImage
+};
 
 const Post = () => {
   const { id } = useParams();
@@ -23,9 +28,12 @@ const Post = () => {
       const data = await response.data;
 
       if (!data.error) {
-        const categories = data.categories.length > 0 ? data.categories
-          .split(",")
-          .map((item) => item.trim().toLowerCase()) : [];
+        const categories =
+          data.categories.length > 0
+            ? data.categories
+                .split(",")
+                .map((item) => item.trim().toLowerCase())
+            : [];
         const post = { ...data, categories };
         setState({ ...state, isLoading: false, post, postExist: true });
       } else {
@@ -83,6 +91,13 @@ const Post = () => {
                 )}
               <h1 class="mb-3">{state.post.title}</h1>
               <div class="summary">{state.post.summary}</div>
+              <div className="author mt-4">
+                <NavLink to={`/profile/${state.post.author_username}`}>
+                  <span className="category">
+                    by <b>{state.post.author_username}</b>
+                  </span>
+                </NavLink>
+              </div>
             </div>
             <div
               className="post-cover"
@@ -90,7 +105,7 @@ const Post = () => {
             ></div>
 
             <div class="post-content my-5">
-              <ReactMarkdown source={state.post.content} />
+              <ReactMarkdown source={state.post.content} renderers={renderers} />
             </div>
           </>
         ) : (

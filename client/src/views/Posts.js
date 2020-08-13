@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import PostCard from "../components/PostCard";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -8,15 +9,15 @@ const Posts = () => {
 
   useEffect(() => {
     (async () => {
-      const result = await fetch("/api/posts");
-      const data = await result.json();
-      console.log(data);
+      const result = await axios.get("/api/posts");
+      const data = await result.data;
+
       setState({ ...state, postsList: data, isLoading: false });
     })();
   }, []);
 
   return (
-    <section className="app__posts container">
+    <section className="posts container">
       {state.isLoading ? (
         <Loading message="loading posts, wait..." />
       ) : (

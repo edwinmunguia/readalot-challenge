@@ -10,7 +10,9 @@ import Posts from "./views/Posts";
 import Post from "./views/Post";
 import LogIn from "./views/LogIn";
 import SignUp from "./views/SignUp";
-import PostHandler from "./views/PostHandler";
+import NewPost from "./views/NewPost";
+import EditPost from "./views/EditPost";
+import Profile from "./views/Profile";
 import { AuthContext } from "./contexts/AuthContext";
 
 const AppRoutes = () => {
@@ -34,13 +36,16 @@ const AppRoutes = () => {
           <Route path="/post/:id/:slug" exact>
             <Post />
           </Route>
+          <Route path="/profile/:username">
+            <Profile />
+          </Route>
           <Route path="/posts/new" exact>
-            {loggedInUser.isLoggedIn !==true && <Redirect to="/login" />}
-            <PostHandler mode="new" hasToLoad={false} />
+            {loggedInUser.isLoggedIn !== true && <Redirect to="/login" />}
+            <NewPost />
           </Route>
           <Route path="/posts/edit/:id">
             {!loggedInUser.isLoggedIn && <Redirect to="/login" />}
-            <PostHandler mode="edit" hasToLoad={true} />
+            <EditPost />
           </Route>
         </Switch>
       </MainLayout>

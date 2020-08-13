@@ -31,7 +31,7 @@ const PostCard = ({ post }) => {
           <div className="author">
             <NavLink
               className="author-link"
-              to={`/profile/${post.author_id}`}
+              to={`/profile/${post.author_username}`}
               exact
             >
               {post.author_username}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useHistory } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import ReactMarkdown from "react-markdown";
@@ -8,8 +8,9 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { AuthContext } from "../contexts/AuthContext";
+import { CommentsContext } from "../contexts/CommentsContext";
 import CustomPostImage from "../components/CustomPostImage";
-
+import Comments from "../components/Comments";
 
 const renderers = {
   image: CustomPostImage,
@@ -18,13 +19,15 @@ const renderers = {
 const Post = () => {
   const { id } = useParams();
   const { loggedInUser } = useContext(AuthContext);
+  const { commentsList, addCommentsList } = useContext(CommentsContext);
   const [state, setState] = useState({
     isLoading: true,
     post: {},
-    comments: [],
     postExist: false,
     errorMessage: "",
+    errorOnDeleting: null,
   });
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -35,6 +38,7 @@ const Post = () => {
 
       const postData = await responses[0].data;
       const commentsData = await responses[1].data;
+      addCommentsList(commentsData);
 
       if (!postData.error) {
         const categories =
@@ -48,7 +52,6 @@ const Post = () => {
           ...state,
           isLoading: false,
           post,
-          comments: commentsData,
           postExist: true,
         });
       } else {
@@ -56,7 +59,6 @@ const Post = () => {
           ...state,
           isLoading: false,
           post: null,
-          comments: [],
           postExist: false,
           errorMessage: postData.error,
         });
@@ -64,13 +66,44 @@ const Post = () => {
     })();
   }, []);
 
-  const handleNewComment = (data) => {
-    const newCommentsList = [...state.comments, data];
-    setState({ ...state, comments: newCommentsList });
-  };
+  const handleDeletePost = (commentId) => {
+    const deletePostFromServer = () => {
+      axios
+        .delete(`/api/posts/${commentId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": loggedInUser.token,
+          },
+        })
+        .then((result) => {
+          const data = result.data;
+          if (!data.error) {
+            //Removes, Let's go to the main page
+            history.push("/");
+          } else {
+            setState({
+              ...state,
+              errorOnDeleting: data.error,
+            });
+          }
+        })
+        .catch((err) => {});
+    };
 
-  const handleDeleteComment = (commentId) => {
-    
+    confirmAlert({
+      title: "Delete post?",
+      message: "Are you sure you want to delete permanently this post?",
+      buttons: [
+        {
+          label: "Delete",
+          onClick: () => deletePostFromServer(),
+        },
+        {
+          label: "Cancel",
+          onClick: () => null,
+        },
+      ],
+    });
   };
 
   return (
@@ -80,6 +113,11 @@ const Post = () => {
           <Loading message="were loading something special for you, please, wait..." />
         ) : state.postExist ? (
           <>
+            {state.errorOnDeleting && (
+              <div className="alert alert-danger" role="alert">
+                {state.errorOnDeleting}
+              </div>
+            )}
             <div class="post-heading">
               {state.post.categories.length > 0 &&
                 state.post.categories.map((category, index) => (
@@ -106,7 +144,10 @@ const Post = () => {
                       <span className="btn btn-link px-0">Edit post</span>
                     </NavLink>
                     <span class="separator">&#8226;</span>
-                    <button className="btn btn-link mr-2 px-0">
+                    <button
+                      className="btn btn-link mr-2 px-0"
+                      onClick={handleDeletePost}
+                    >
                       <span className="edit">Delete post</span>
                     </button>
                   </>
@@ -132,7 +173,7 @@ const Post = () => {
                 renderers={renderers}
               />
             </div>
-            
+            <Comments data={commentsList} />
           </>
         ) : (
           <Message

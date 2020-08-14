@@ -5,42 +5,6 @@ import axios from "axios";
 
 const Comment = ({ data, onDeletePress }) => {
   const handleDelete = () => {
-    const deleteComment = () => {
-      axios
-        .delete(`/api/comments/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": loggedInUser.token,
-          },
-        })
-        .then((result) => {
-          const data = result.data;
-          if (!data.error) {
-            const filteredList = state.comments.filter(
-              (comment) => comment.id !== commentId
-            );
-            setState({ ...state, comments: filteredList });
-          } else {
-          }
-        })
-        .catch((err) => {});
-    };
-
-    confirmAlert({
-      title: "Delete comment",
-      message: "Are you sure you want to delete this comment?",
-      buttons: [
-        {
-          label: "Delete",
-          onClick: () => handleDelete(),
-        },
-        {
-          label: "Cancel",
-          onClick: () => null,
-        },
-      ],
-    });
-
     onDeletePress(data.id);
   };
 

@@ -22,8 +22,7 @@ router.get("/post/:id", async (req, res) => {
 
     //Error. The post doesn't exist
     if (postExist.rows.length < 1)
-      return res
-        .json(utils.generateError("The post doesn't exist."));
+      return res.json(utils.generateError("The post doesn't exist."));
 
     //Otherwise, let's send comments list
     const result = await pool.query(
@@ -53,9 +52,7 @@ router.post("/", verifyToken, async (req, res) => {
     const { error } = validateCommentData({ comment });
 
     //Let's check if there is an error
-    if (error)
-      return res
-        .json(utils.generateError(error.details[0].message));
+    if (error) return res.json(utils.generateError(error.details[0].message));
 
     //Let's verify the current post exist
     const postExist = await pool.query(
@@ -82,6 +79,37 @@ router.post("/", verifyToken, async (req, res) => {
       published_on: result.rows[0].published_on,
     });
   } catch (err) {
+    return res.json(utils.generateError("Something went wrong, try again."));
+  }
+});
+
+/**
+ * Retrieve post's comments list
+ */
+router.delete("/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (id < 0) return res.json(utils.generateError("Invalid post ID."));
+
+    //Verify if the current post exist
+    const commentExist = await pool.query(
+      "SELECT id FROM comments WHERE id=$1 LIMIT 1",
+      [id]
+    );
+
+    //Error. The post doesn't exist
+    if (commentExist.rows.length < 1)
+      return res.json(
+        utils.generateError("The comment has already been removed.")
+      );
+
+    //Otherwise, let's send comments list
+    const result = await pool.query("DELETE FROM comments WHERE id=$1", [id]);
+
+    return res.json({success: "The comment was successfully removed."});
+  } catch (err) {
+    console.log(err);
     return res.json(utils.generateError("Something went wrong, try again."));
   }
 });

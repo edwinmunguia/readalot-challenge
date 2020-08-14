@@ -1,7 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 import axios from "axios";
+import { CommentsContext } from "../contexts/CommentsContext";
 
 const CommentForm = ({ post, user, onAddComment }) => {
+  const { addComment } = useContext(CommentsContext);
   const [state, setState] = useState({
     isProcessing: false,
     errorFromServer: null,
@@ -20,7 +22,10 @@ const CommentForm = ({ post, user, onAddComment }) => {
       axios
         .post(
           `/api/comments`,
-          { post: post, comment: comment.current.value },
+          {
+            post: post,
+            comment: comment.current.value,
+          },
           {
             headers: {
               "Content-Type": "application/json",
@@ -31,7 +36,10 @@ const CommentForm = ({ post, user, onAddComment }) => {
         .then((result) => {
           const data = result.data;
           if (!data.error) {
-            onAddComment(data);
+            //Send the new comment to the Context
+            addComment(data);
+
+            //Update the State
             setState({
               ...state,
               isProcessing: false,
@@ -50,7 +58,6 @@ const CommentForm = ({ post, user, onAddComment }) => {
             ...state,
             isProcessing: false,
           });
-
         });
     } else {
       comment.current.focus();

@@ -55,7 +55,8 @@ router.post("/login", async (req, res) => {
       user: loggedInUser,
       token,
     });
-  } catch (e) {
+  } catch (err) {
+    console.error(err);
     return res.json(utils.generateError("Something went wrong, try again."));
   }
 });
@@ -107,7 +108,7 @@ router.post("/signup", async (req, res) => {
 
     //Save the world! :'D
     const result = await pool.query(
-      "INSERT INTO users (username, email, password, registered_on) VALUES($1, $2, $3, NOW())",
+      "INSERT INTO users (username, email, password, registered_on) VALUES($1, $2, $3, NOW()) RETURNING id",
       [username, email, hashedPassword]
     );
 
@@ -119,7 +120,8 @@ router.post("/signup", async (req, res) => {
       user: newUser,
       token,
     });
-  } catch (e) {
+  } catch (err) {
+    console.error(err);
     return res.json(utils.generateError("Something went wrong, try again."));
   }
 });

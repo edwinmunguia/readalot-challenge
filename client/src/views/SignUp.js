@@ -137,7 +137,7 @@ const SignUp = () => {
               )}
             </div>
           </div>
-          {!isProcessing ? (
+          {!state.isProcessing ? (
             <button type="submit" className="btn btn-primary">
               Create
             </button>

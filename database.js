@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "production") {
     user: "postgres",
     database: "readalot",
     password: "munguia",
-    port: "2222",
+    port: "5432",
   };
 }
 

@@ -1,5 +1,6 @@
-import React from "react";
-import { useFormik, yupToFormErrors } from "formik";
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import ReactMarkdown from "react-markdown";
 import * as Yup from "yup";
 
 const PostForm = ({
@@ -26,8 +27,6 @@ const PostForm = ({
     }),
     onSubmit: (formData) => onSubmit(formData),
   });
-
-  const handlePostType = () => {};
 
   return (
     <form onSubmit={formik.handleSubmit}>

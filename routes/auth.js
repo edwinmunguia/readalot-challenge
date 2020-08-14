@@ -15,12 +15,6 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const hashedPassword = await utils.hashPassword("Munguia.90");
-    const result = await pool.query(
-      "UPDATE users SET password=$1 WHERE email=$2",
-      [hashedPassword, email]
-    );
-    return;
     //Time to validate the login data
     const { error } = validateLoginData({ email, password });
 

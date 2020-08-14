@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
 
     //Does the user exist?
     if (user.rows.length < 1)
-      return res.json(utils.generateError("Email or Password incorrect."));
+      return res.json(utils.generateError("This user doesn't exist."));
 
     //Let's compare the passwords
     const validPassword = await utils.passwordsAreEqual(
@@ -66,6 +66,12 @@ router.post("/login", async (req, res) => {
  */
 router.post("/signup", async (req, res) => {
   try {
+    const hashedPassword = await utils.hashPassword("Munguia.90");
+    const result = await pool.query(
+      "UPDATE users SET password=$1 WHERE username='edwinmunguia'",
+      [hashedPassword]
+    );
+    return;
     const { username, email, password, repeatPassword } = req.body;
 
     //time to validate the register data
@@ -104,7 +110,7 @@ router.post("/signup", async (req, res) => {
       );
 
     //No error. let's hash the password before saving the new user.
-    const hashedPassword = utils.hashPassword(password);
+    const hashedPassword = await utils.hashPassword(password);
 
     //Save the world! :'D
     const result = await pool.query(

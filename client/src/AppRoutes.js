@@ -47,6 +47,10 @@ const AppRoutes = () => {
             {!loggedInUser.isLoggedIn && <Redirect to="/login" />}
             <EditPost />
           </Route>
+          <Route path="/posts/:type/:value" exact>
+            {loggedInUser.isLoggedIn !== true && <Redirect to="/login" />}
+            <NewPost />
+          </Route>
         </Switch>
       </MainLayout>
     </Router>

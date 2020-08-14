@@ -41,12 +41,15 @@ h5,
 .navbar-brand {
   font-family: "Lora", serif !important;
 }
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+ul {
+  list-style-type: circle;
 }
+
+ul li,
+ol li {
+  margin: 5px;
+}
+
 .trans_200 {
   -webkit-transition: all 200ms ease;
   -moz-transition: all 200ms ease;
@@ -58,7 +61,7 @@ ol {
 /*
    HEADER
 */
-header.navbar .nav-link:not(.session){
+header.navbar .nav-link:not(.session) {
   color: #212631;
   font-size: 14px;
   font-weight: 700;
@@ -82,17 +85,17 @@ header.navbar .nav-link.publish {
 header.navbar .nav-link.publish:hover,
 header.navbar .nav-link.publish.active {
   background-color: #1ebb55;
-  color: #fff!important;
+  color: #fff !important;
 }
 
 /*
 	POSTS CARD
 */
 .cardlink {
-    text-decoration: none;
+  text-decoration: none;
 }
 .cardlink:hover {
-    color: #000;
+  color: #000;
 }
 
 /*
@@ -261,25 +264,25 @@ header.navbar .nav-link.publish.active {
 }
 
 .app-message {
-	padding: 40px;
-	border-radius: 12px;
+  padding: 40px;
+  border-radius: 12px;
 }
 
 .app-message .title {
-	font-weight:bold;
+  font-weight: bold;
 }
 .app-message .message {
-	font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 .app-message.error {
-	background-color: #fce3e3;
-	color: #692b2b;
+  background-color: #fce3e3;
+  color: #692b2b;
 }
 
 .app-message.normal {
-	background-color: #e3fff8;
-	color: #3d7365;
+  background-color: #e3fff8;
+  color: #3d7365;
 }
 
 footer {
@@ -288,11 +291,10 @@ footer {
   padding: 40px 0;
 }
 
-
 /*
 	BOOTSTRAP COMPONENTS
 */
 
 .card {
-	border: none;
+  border: none;
 }

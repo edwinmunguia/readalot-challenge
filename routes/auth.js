@@ -66,12 +66,6 @@ router.post("/login", async (req, res) => {
  */
 router.post("/signup", async (req, res) => {
   try {
-    const hashedPassword = await utils.hashPassword("Munguia.90");
-    const result = await pool.query(
-      "UPDATE users SET password=$1 WHERE username='edwinmunguia'",
-      [hashedPassword]
-    );
-    return;
     const { username, email, password, repeatPassword } = req.body;
 
     //time to validate the register data

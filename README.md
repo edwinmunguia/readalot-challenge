@@ -12,7 +12,8 @@ The idea behind this project is to create a platform to give users to opportunit
 - [x] Markdown
 - [ ] More Profile Information
 - [ ] Delete account
-- [ ] Update Password 
+- [ ] Update Password
+- [ ] Relate posts by tags
 
 ## Tech Stack
 - ReactJs (Frontend)
@@ -32,6 +33,6 @@ The idea behind this project is to create a platform to give users to opportunit
 - express-promise-router
 - bcryptjs
 
-# Special thanks to
+## Special thanks to
 - Heroku <3
 - Github <3

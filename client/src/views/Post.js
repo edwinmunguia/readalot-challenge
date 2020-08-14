@@ -121,13 +121,7 @@ const Post = () => {
             <div class="post-heading">
               {state.post.categories.length > 0 &&
                 state.post.categories.map((category, index) => (
-                  <NavLink
-                    className="mr-2"
-                    key={index}
-                    to={`/posts/tag/${category}`}
-                  >
-                    <span className="category">#{category}</span>
-                  </NavLink>
+                  <span className="category">#{category}</span>
                 ))}
               <span class="separator">&#8226;</span>
               <span class="published">

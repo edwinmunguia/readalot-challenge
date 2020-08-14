@@ -35,7 +35,7 @@ const Profile = () => {
       ) : (
         <>
           <div className="text-center profile-header py-5 ">
-            <h1 className="display-4">edwinmunguia's articles</h1>
+            <h1 className="display-4">{username}'s articles</h1>
           </div>
           <div className="posts row">
             {state.postsList.length > 0 ? (

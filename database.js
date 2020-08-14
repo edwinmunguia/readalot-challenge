@@ -9,17 +9,11 @@ if (process.env.NODE_ENV === "production") {
     host: "localhost",
     user: "postgres",
     database: "readalot",
-    password: "munguia",
+    password: "",
     port: "2222",
   };
 }
 
-const pool = new Pool({
-  host: "localhost",
-  user: "postgres",
-  database: "readalot",
-  password: "munguia",
-  port: "2222",
-});
+const pool = new Pool(connection);
 
 module.exports = pool;

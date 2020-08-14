@@ -83,7 +83,7 @@ const Header = () => {
                 </div>
               </>
             ) : (
-              <div className="d-inline d-lg-flex ml-lg-auto">
+              <div className="d-inline d-lg-flex ml-lg-auto align-items-center">
                 <li className="nav-item">
                   <NavLink className="nav-link" aria-current="page" to="/login">
                     Log In
@@ -91,7 +91,7 @@ const Header = () => {
                 </li>
                 <li className="nav-item">
                   <NavLink
-                    className="btn ml-lg-2 btn-success active"
+                    className="btn ml-lg-2 btn-success"
                     aria-current="page"
                     to="/signup"
                   >

@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Comment = ({ data, onDeletePress }) => {
+  const { loggedInUser } = useContext(AuthContext);
+
   const handleDelete = () => {
     onDeletePress(data.id);
   };
@@ -25,11 +28,16 @@ const Comment = ({ data, onDeletePress }) => {
       <div className="comment-body">
         <p>{data.comment}</p>
       </div>
-      <div className="comment-controls">
-        <button className="btn btn-link p-0 text-danger" onClick={handleDelete}>
-          <span className="edit">Delete comment</span>
-        </button>
-      </div>
+      {loggedInUser.isLoggedIn && (
+        <div className="comment-controls">
+          <button
+            className="btn btn-link p-0 text-danger"
+            onClick={handleDelete}
+          >
+            <span className="edit">Delete comment</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

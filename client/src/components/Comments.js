@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import CommentForm from "./CommentForm";
@@ -53,13 +53,10 @@ const Comments = ({ data }) => {
       <div className="col-11 col-md-7">
         <h3>Post's comments</h3>
         {loggedInUser.isLoggedIn ? (
-          <CommentForm
-            post={id}
-            user={loggedInUser}
-          />
+          <CommentForm post={id} user={loggedInUser} />
         ) : (
           <div className="login-to-comment">
-            You must log in to comment this post.
+            You must <NavLink className="font-weight-bold" to="/login">log in</NavLink> to comment this post.
           </div>
         )}
         {data.length > 0 ? (

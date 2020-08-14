@@ -66,10 +66,10 @@ const Post = () => {
     })();
   }, []);
 
-  const handleDeletePost = (commentId) => {
+  const handleDeletePost = () => {
     const deletePostFromServer = () => {
       axios
-        .delete(`/api/posts/${commentId}`, {
+        .delete(`/api/posts/${id}`, {
           headers: {
             "Content-Type": "application/json",
             "auth-token": loggedInUser.token,

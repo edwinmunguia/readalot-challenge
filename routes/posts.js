@@ -129,10 +129,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
     const { title, content, categories } = req.body;
     const authorId = parseInt(req.user.id);
 
-    if (id < 0)
-      return res.json(
-        utils.generateError("Invalid post ID.")
-      );
+    if (id < 0) return res.json(utils.generateError("Invalid post ID."));
 
     //Validate post data
     const { error } = validatePostData({
@@ -167,6 +164,45 @@ router.patch("/:id", verifyToken, async (req, res) => {
       author: authorId,
     });
   } catch (err) {
+    return res.json(utils.generateError("Something went wrong, try again."));
+  }
+});
+
+/**
+ * Delete a post
+ */
+router.delete("/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (id < 0) return res.json(utils.generateError("Invalid post ID."));
+
+    //Verify if the current post exist
+    const postExist = await pool.query(
+      "SELECT id FROM posts WHERE id=$1 LIMIT 1",
+      [id]
+    );
+
+    //Error. The post doesn't exist
+    if (postExist.rows.length < 1)
+      return res.json(
+        utils.generateError(
+          "This post doesn't exist or has already been removed."
+        )
+      );
+
+    //Otherwise, let's remove comments
+    const commentResult = await pool.query(
+      "DELETE FROM comments WHERE post=$1",
+      [id]
+    );
+
+    //let's remove the Post
+    const postResult = await pool.query("DELETE FROM posts WHERE id=$1", [id]);
+
+    return res.json({ success: "The post was successfully removed." });
+  } catch (err) {
+    console.log(err);
     return res.json(utils.generateError("Something went wrong, try again."));
   }
 });

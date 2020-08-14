@@ -90,7 +90,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (id < 0) return res.json(utils.generateError("Invalid post ID."));
+    if (id < 0) return res.json(utils.generateError("Invalid comment ID."));
 
     //Verify if the current post exist
     const commentExist = await pool.query(
@@ -101,13 +101,15 @@ router.delete("/:id", verifyToken, async (req, res) => {
     //Error. The post doesn't exist
     if (commentExist.rows.length < 1)
       return res.json(
-        utils.generateError("The comment has already been removed.")
+        utils.generateError(
+          "The comment doesn't exist or has already been removed."
+        )
       );
 
     //Otherwise, let's send comments list
     const result = await pool.query("DELETE FROM comments WHERE id=$1", [id]);
 
-    return res.json({success: "The comment was successfully removed."});
+    return res.json({ success: "The comment was successfully removed." });
   } catch (err) {
     console.log(err);
     return res.json(utils.generateError("Something went wrong, try again."));

@@ -7,9 +7,11 @@ import { AuthContext } from "../contexts/AuthContext";
 import { authStorage } from "../utils/authstorage";
 
 const SignUp = () => {
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [errorFromServer, setErrorFromServer] = useState(null);
-  const { loggedInUser, logInUser } = useContext(AuthContext);
+  const [state, setState] = useState({
+    isProcessing: false,
+    errorFromServer: null,
+  });
+  const { logInUser } = useContext(AuthContext);
   const history = useHistory();
 
   const formik = useFormik({
@@ -19,6 +21,7 @@ const SignUp = () => {
       password: "",
       repeatPassword: "",
     },
+
     validationSchema: Yup.object({
       username: Yup.string()
         .min(3, "Must be at least 3 characters or more")
@@ -35,18 +38,17 @@ const SignUp = () => {
         .oneOf([Yup.ref("password"), null], "Passwords must match"),
     }),
     onSubmit: async (formData) => {
-      setIsProcessing(true);
+      setState({ isProcessing: true });
       const response = await axios.post("/api/auth/signup", formData);
       const data = await response.data;
 
       if (!data.error) {
         logInUser(data.user, data.token);
         authStorage.save(data.user, data.token);
-        setIsProcessing(false);
+        setState({ isProcessing: false, errorFromServer: null });
         history.push("/");
       } else {
-        setErrorFromServer(data.error);
-        setIsProcessing(false);
+        setState({ isProcessing: false, errorFromServer: data.error });
       }
     },
   });
@@ -55,9 +57,9 @@ const SignUp = () => {
     <div className="login row justify-content-center">
       <div className="col-11 col-md-6 card shadow-sm py-3 px-4 my-5">
         <h3 className="mb-4">Create account</h3>
-        {errorFromServer && (
+        {state.errorFromServer && (
           <div className="alert alert-danger" role="alert">
-            {errorFromServer}
+            {state.errorFromServer}
           </div>
         )}
         <form onSubmit={formik.handleSubmit}>

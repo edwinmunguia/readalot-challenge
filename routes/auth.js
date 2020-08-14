@@ -78,7 +78,6 @@ router.post("/signup", async (req, res) => {
     //Is there and error? Let the user know it.
     if (error)
       return res
-        .status(400)
         .json(utils.generateError(error.details[0].message));
 
     //Is there already an user with this username?

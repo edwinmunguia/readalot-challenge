@@ -24,7 +24,7 @@ const EditPost = () => {
   useEffect(() => {
     (async () => {
       const response = await axios.get(`/api/posts/${id}`);
-      console.log(response);
+
       const data = await response.data;
 
       if (!data.error) {

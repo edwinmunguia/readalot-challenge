@@ -30,7 +30,7 @@ const PostCard = ({ post }) => {
         <div className="card-body d-flex justify-content-between">
           <div className="author">
             <NavLink
-              className="author-link"
+              className="author-link font-weight-bold"
               to={`/profile/${post.author_username}`}
               exact
             >

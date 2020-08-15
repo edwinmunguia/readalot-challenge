@@ -68,8 +68,13 @@ const Header = () => {
                       {loggedInUser.user.username}
                     </a>
                     <ul class="dropdown-menu">
-                    <li>
-                        <NavLink class="dropdown-item" activeClassName="active" to={`/profile/${loggedInUser.user.username}`} exact>
+                      <li>
+                        <NavLink
+                          class="dropdown-item"
+                          activeClassName="active"
+                          to={`/profile/${loggedInUser.user.username}`}
+                          exact
+                        >
                           Profile
                         </NavLink>
                       </li>

@@ -5,7 +5,7 @@ import moment from "moment";
 const PostCard = ({ post }) => {
   return (
     <NavLink
-      className="col-12 col-md-4 cardlink "
+      className="col-12 col-md-6 col-lg-4 cardlink"
       to={`/post/${post.id}/${post.slug}`}
       exact
     >

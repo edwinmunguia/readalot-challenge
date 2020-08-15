@@ -139,7 +139,7 @@ const SignUp = () => {
           </div>
           {!state.isProcessing ? (
             <button type="submit" className="btn btn-primary">
-              Create
+              Create account
             </button>
           ) : (
             <div className="spinner-border text-success mb-3" role="status">

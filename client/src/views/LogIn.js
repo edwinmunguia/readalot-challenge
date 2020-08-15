@@ -90,7 +90,7 @@ const LogIn = () => {
           </div>
           {!isProcessing ? (
             <button type="submit" className="btn btn-primary">
-              Create
+              Log in
             </button>
           ) : (
             <div className="spinner-border text-success mb-3" role="status">

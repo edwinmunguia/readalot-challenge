@@ -31,7 +31,7 @@ const PostHandler = ({ mode, hasToLoad }) => {
 
   return (
     <div className="row post justify-content-center">
-      <div className="col-8 card shadow py-3">
+      <div className="col-11 col-md-8 card shadow py-3">
         <h2 className="mb-3">Add new article</h2>
         {state.errorOnPosting && (
           <div className="alert alert-danger" role="alert">

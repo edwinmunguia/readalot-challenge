@@ -107,8 +107,8 @@ const Post = () => {
   };
 
   return (
-    <section className="app__post container py-3">
-      <div className="row justify-content-center">
+    <section className="app__post py-3">
+      <div className="article-container justify-content-center">
         {state.isLoading ? (
           <Loading message="were loading something special for you, please, wait..." />
         ) : state.postExist ? (
@@ -119,18 +119,21 @@ const Post = () => {
               </div>
             )}
             <div class="post-heading">
-              {state.post.categories.length > 0 &&
-                state.post.categories.map((category, index) => (
-                  <span className="category">#{category}</span>
-                ))}
-              <span class="separator">&#8226;</span>
+              {state.post.categories.length > 0 && (
+                <div className="categories">
+                  {state.post.categories.map((category, index) => (
+                    <span className="category">#{category}</span>
+                  ))}
+                  <span class="separator">&#8226;</span>
+                </div>
+              )}
               <span class="published">
                 {moment(state.post.published_on).format("MMM D, yyyy")}
               </span>
               {loggedInUser.isLoggedIn &&
                 loggedInUser.user.id === state.post.author_id && (
-                  <>
-                    <span class="separator">&#8226;</span>
+                  <div className="d-block mt-1 d-md-inline-block mt-md-0 post-actions">
+                    <span class="separator d-none d-md-inline">&#8226;</span>
                     <NavLink
                       className="mr-2"
                       to={`/posts/edit/${state.post.id}`}
@@ -144,7 +147,7 @@ const Post = () => {
                     >
                       <span className="edit">Delete post</span>
                     </button>
-                  </>
+                  </div>
                 )}
               <h1 class="mb-3">{state.post.title}</h1>
               <div class="summary">{state.post.summary}...</div>

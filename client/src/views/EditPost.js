@@ -49,7 +49,7 @@ const EditPost = () => {
         "auth-token": loggedInUser.token,
       },
     });
-    console.log(response);
+
     const data = await response.data;
 
     if (!data.error) {
@@ -69,7 +69,7 @@ const EditPost = () => {
       {state.isLoading ? (
         <Loading message="Preparing to edit post, wait..." />
       ) : state.postExist ? (
-        <div className="col-8 card shadow py-3">
+        <div className="col-11 col-md-8 card shadow py-3">
           <h2 className="mb-3">Edit article</h2>
           {state.errorOnUpdatingMessage && (
             <div className="alert alert-danger" role="alert">
